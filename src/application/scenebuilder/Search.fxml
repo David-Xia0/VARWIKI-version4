@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.scenebuilder.SearchController">
+   <children>
+      <AnchorPane prefHeight="600.0" prefWidth="800.0">
+         <children>
+            <Button fx:id="_searchButton" defaultButton="true" layoutX="527.0" layoutY="259.0" mnemonicParsing="false" onAction="#search" text="Search" />
+            <Label layoutX="173.0" layoutY="183.0" text="Please select a search term for your creation:">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+            <TextField fx:id="_term" layoutX="271.0" layoutY="252.0" prefHeight="40.0" prefWidth="238.0" promptText="term">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </TextField>
+            <Button fx:id="_backButton" cancelButton="true" layoutX="737.0" layoutY="560.0" mnemonicParsing="false" onAction="#back" style="-fx-background-color: red;" text="back" />
+            <ProgressIndicator fx:id="_searching" layoutX="533.0" layoutY="246.0" visible="false" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
