@@ -58,13 +58,14 @@ public class CreateMenuController implements Initializable {
 	private int audioCount=0;
 	private SetImagesController _controller;
 	private String __videoName;
+	private boolean _cancel;
 
 	@FXML
 	private Button _playButton;
 
 	@FXML 
 	private ProgressIndicator _loading;
-	
+
 	@FXML
 	private Button _imageButton;
 
@@ -102,7 +103,7 @@ public class CreateMenuController implements Initializable {
 
 	@FXML
 	private Button _returnButton;
-	
+
 	@FXML
 	private Button _newSearchButton;
 
@@ -113,8 +114,9 @@ public class CreateMenuController implements Initializable {
 	private Stage _stage;
 	private boolean _saving=false;
 	private boolean _defaultImages=true;
+	private int _i;
 
-	
+
 	/**
 	 * this initialises choice box to allow for the selection of different festival voices
 	 */
@@ -124,7 +126,7 @@ public class CreateMenuController implements Initializable {
 		voices.addAll("Default","(voice_akl_nz_cw_cg_cg)","(voice_akl_nz_jdt_diphone)");
 		_festivalVoice.setItems(voices);
 	}
-	
+
 	/**
 	 * this saves all text in box, regardless of what is selected
 	 */
@@ -141,7 +143,7 @@ public class CreateMenuController implements Initializable {
 	 */
 	@FXML
 	void handleCreate(ActionEvent event) {
-		
+
 		//ERROR checking
 		if(_runningThread) {
 			error("Please Wait for Processes to Finish");
@@ -153,14 +155,14 @@ public class CreateMenuController implements Initializable {
 				return;
 			}
 		}
-		
+
 		if(_videoName.getText().isBlank()) {
 			error("No Name set");
 			return;
 		}else if(_audioList.isEmpty()){
 			boolean confirmed = noText();
 			if (!confirmed){
-			return;
+				return;
 			}
 			saveAllAudio();
 		}
@@ -215,11 +217,10 @@ public class CreateMenuController implements Initializable {
 		List<String> images = getSelectedImages();
 		String name = _videoName.getText();
 		String audioFileNames="";
-		
+
 		for(Node audio:_audioList) {
 			audioFileNames = audioFileNames+audio.toString()+".wav ";
 		}		
-
 		RunBash mergeAudio = new RunBash("sox "+ audioFileNames +" ./resources/temp/output.wav");
 		_team.submit(mergeAudio);	
 		mergeAudio.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
@@ -282,7 +283,7 @@ public class CreateMenuController implements Initializable {
 	 */
 	private void markImages(List<String> images) {
 		for (String path: images) {
-		
+
 			RunBash mark= new RunBash("ffmpeg -i ./resources/temp/images/" + path + " -vf \"drawtext=text='"+ _term + "':fontcolor=white:fontsize=75:x=(w-text_w)/2: y=(h-text_h-line_h)/2:\" ./resources/temp/" + path);
 			_team.submit(mark);
 		}
@@ -305,7 +306,7 @@ public class CreateMenuController implements Initializable {
 		}
 
 	}
-	
+
 	/**
 	 * allows user to search for a new term after prompting with a confirmation msg
 	 */
@@ -321,7 +322,7 @@ public class CreateMenuController implements Initializable {
 		}
 
 	}
-	
+
 	/**
 	 * allows user to select whether to create a video using default images if user has not manually selected images 
 	 * */
@@ -338,7 +339,7 @@ public class CreateMenuController implements Initializable {
 		}
 
 	}
-	
+
 	/**
 	 * allows user to select whether to create a video using the text in box, if user has not manually selected text
 	 */
@@ -394,12 +395,12 @@ public class CreateMenuController implements Initializable {
 		_defaultImages = false;
 		popupSetImages();
 	}
-	
-	
+
+
 	public void popdownSetImages() {
 		_stage.hide();;
 	}
-	
+
 	private void popupSetImages() {
 		_stage.show();
 	}
@@ -410,68 +411,104 @@ public class CreateMenuController implements Initializable {
 	 */
 	@FXML
 	void handleSaveAudio() {
-		
+		handleSaveAudio(20);
+	}
+	void handleSaveAudio(int length) {
+		_cancel = false;
+		int maxLength = length;
 		_saving = true;
+		int extra;
 		String selectedText = _displayTextArea.getSelectedText();
 		String[] wordCount = selectedText.split("\\s+");
 
 		if(selectedText.isEmpty()) {
 			_saving=false;
 			return;
-		}else if(wordCount.length>40) {
-			for(int i =0; i<wordCount.length/40 + 1; i++) {
-				String audio = "";
-				for (int j=0; j<40; j++) {
-					int index = 40*i + j;
-					if(index<wordCount.length) {
-						audio = audio + wordCount[index] + " ";
-					}
-				}
-				saveAudio(audio);
-				
-			}
-			_saving=false;
-			return;
 		}
-		saveAudio(selectedText);
-		_saving=false;
-	}
-	
-	private void saveAudio(String selectedText){
-		audioCount++;
-		String voice = _festivalVoice.getSelectionModel().getSelectedItem();
-		int audiocount = audioCount;
-		if( voice ==null || voice.contentEquals("Default") ) {
-			RunBash audioCreation = new RunBash("echo \"" + selectedText + "\" | text2wave -o ./resources/temp/"+ audioCount + ".wav");
-
-			_team.submit(audioCreation);
-			_runningThread = true;
-			audioCreation.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-				@Override
-				public void handle(WorkerStateEvent event) {
-					_runningThread=false;
-					new AudioBar(selectedText,audiocount+"",_audioList);
-					_audioBox.setItems(_audioList);
-				}
-			});
+		List<RunBash>commandList = new ArrayList<RunBash>();
+		List<String>audioList = new ArrayList<String>();
+		if(length%maxLength!=0) {
+			extra = 1;
 		}else {
-			RunBash audioCreation = new RunBash("echo \"" + selectedText + "\" | text2wave -o ./resources/temp/"+ audioCount + ".wav " + "-eval \""+_festivalVoice.getSelectionModel().getSelectedItem()+"\"");
-			_team.submit(audioCreation);
-			_runningThread = true;
+			extra = 0;
+		}
+		System.out.println(extra);
+		for(_i =0; _i<=wordCount.length/maxLength + extra; _i++) {
+			String audio = "";
+			for (int j=0; j<maxLength; j++) {
+				int index = maxLength*_i + j;
+				if(index<wordCount.length) {
+					audio = audio + wordCount[index] + " ";
+				}
+			}
+			System.out.println(_i);
+			audioList.add(audio);
+			commandList.add(saveAudio(audio));
+		} 
+		RunBash lastCommand = commandList.get(commandList.size()-1);
+		lastCommand.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+
+			@Override
+			public void handle(WorkerStateEvent arg0) {
+				if(lastCommand.returnError() != null &&lastCommand.returnError().substring(0, 10).contentEquals("SIOD ERROR")) {
+					error("some words selected cannot be converted by selected voice package");
+					_cancel = true;
+				}
+				if(_cancel) {
+					return;
+				}
+				String audioFileNames="";
+				for(int i =0; i<audioList.size(); i++) {
+					audioFileNames = audioFileNames+ "./resources/temp/" + i+"tmp.wav ";	
+				}	
+				System.out.println(audioFileNames);
+				RunBash mergeAudio = new RunBash("sox "+ audioFileNames + "./resources/temp/" + audioCount + ".wav");
+				_team.submit(mergeAudio);	
+				mergeAudio.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+
+					@Override
+					public void handle(WorkerStateEvent arg0) {
+						_saving=false;
+						new AudioBar(selectedText,audioCount+"",_audioList);
+						_audioBox.setItems(_audioList);
+						audioCount++;
+					}
+				});
+			}
+		});
+		for(int i =0; i<commandList.size(); i++) {
+			_team.submit(commandList.get(i));
+		}
+
+
+	}
+
+
+
+	private RunBash saveAudio(String selectedText){
+		int audiocount;
+		RunBash audioCreation;
+		String tmp = "";
+		audiocount = _i;
+		tmp = "tmp";
+		String voice = _festivalVoice.getSelectionModel().getSelectedItem();
+
+		if( voice ==null || voice.contentEquals("Default") ) {
+			audioCreation = new RunBash("echo \"" + selectedText + "\" | text2wave -o ./resources/temp/"+ audiocount + tmp + ".wav");
+		}else {
+			audioCreation = new RunBash("echo \"" + selectedText + "\" | text2wave -o ./resources/temp/"+ audiocount + tmp + ".wav " + "-eval \""+_festivalVoice.getSelectionModel().getSelectedItem()+"\"");
 			audioCreation.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 				@Override
 				public void handle(WorkerStateEvent event) {
 					_runningThread=false;
 					if(audioCreation.returnError() != null && audioCreation.returnError().substring(0, 10).contentEquals("SIOD ERROR")) {
 						error("some words selected cannot be converted by selcted voice package");
-						return;
+						_cancel = true;
 					}
-					new AudioBar(selectedText,audiocount+"",_audioList);
-					_audioBox.setItems(_audioList);
-
 				}
 			});
 		}
+		return audioCreation;
 	}
 
 	/**
@@ -524,41 +561,41 @@ public class CreateMenuController implements Initializable {
 		}
 		return true;
 	}
-	
-	
+
+
 	@FXML
 	void handlePlayAudio(ActionEvent event) {
 		if(checkAudioBar()) {
-		HBox audio = _audioBox.getSelectionModel().getSelectedItem();
-		((AudioBar) audio).playAudio();
+			HBox audio = _audioBox.getSelectionModel().getSelectedItem();
+			((AudioBar) audio).playAudio();
 		}
 	}
 
 	@FXML
 	void handleDeleteAudio(ActionEvent event) {
 		if(checkAudioBar()) {
-		HBox audio = _audioBox.getSelectionModel().getSelectedItem();
-		((AudioBar) audio).delete();
+			HBox audio = _audioBox.getSelectionModel().getSelectedItem();
+			((AudioBar) audio).delete();
 		}
 	}
 
 	@FXML
 	void handleMoveAudioDown(ActionEvent event) {
 		if(checkAudioBar()) {
-		HBox audio = _audioBox.getSelectionModel().getSelectedItem();
-		((AudioBar) audio).moveDown();
-		_audioBox.getSelectionModel().clearSelection();
-		_audioBox.getSelectionModel().select(audio);
+			HBox audio = _audioBox.getSelectionModel().getSelectedItem();
+			((AudioBar) audio).moveDown();
+			_audioBox.getSelectionModel().clearSelection();
+			_audioBox.getSelectionModel().select(audio);
 		}
 	}
 
 	@FXML
 	void handleMoveAudioUp(ActionEvent event) {
 		if(checkAudioBar()) {
-		HBox audio = _audioBox.getSelectionModel().getSelectedItem();
-		((AudioBar) audio).moveUp();
-		_audioBox.getSelectionModel().clearSelection();
-		_audioBox.getSelectionModel().select(audio);
+			HBox audio = _audioBox.getSelectionModel().getSelectedItem();
+			((AudioBar) audio).moveUp();
+			_audioBox.getSelectionModel().clearSelection();
+			_audioBox.getSelectionModel().select(audio);
 		}
 	}
 
@@ -599,7 +636,7 @@ public class CreateMenuController implements Initializable {
 
 
 	}
-	
+
 	/**
 	 * creates slideshow from stored and selected images
 	 */
@@ -622,8 +659,8 @@ public class CreateMenuController implements Initializable {
 		alert.setContentText(msg);
 		alert.showAndWait();
 	}
-	
-	
+
+
 	/**
 	 * passes Search info to scene
 	 * @param text
