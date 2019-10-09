@@ -103,6 +103,7 @@ public class QuizMenuController {
 			player_.setMedia(newMedia);
 		} catch (Exception e) {
 			//e.printStackTrace();
+			
 		}
 	}
 }
