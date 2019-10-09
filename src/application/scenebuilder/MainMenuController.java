@@ -93,6 +93,9 @@ public class MainMenuController implements Initializable{
 
 	@FXML
 	private Button forwardButton;
+	
+	@FXML
+	private Button _quizButton;
 
 	@FXML
 	private Button muteButton;
@@ -177,6 +180,11 @@ public class MainMenuController implements Initializable{
 		if(selectedItem instanceof VideoBar) {
 			((VideoBar) selectedItem).delete();
 		}
+	}
+	
+	@FXML
+	void handleQuiz(ActionEvent event) {
+		
 	}
 
 
