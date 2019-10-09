@@ -31,6 +31,7 @@
             </HBox>
             <Label layoutX="31.0" layoutY="87.0" prefHeight="16.0" prefWidth="173.0" text="Current Creations:" />
             <Label layoutX="356.0" layoutY="87.0" text="Watch selected Creation:" AnchorPane.leftAnchor="386.0" />
+            <Button fx:id="_quizButton" layoutX="14.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleQuiz" text="Take A Quiz" />
          </children>
       </AnchorPane>
    </children>

@@ -95,6 +95,9 @@ public class MainMenuController implements Initializable{
 	private Button forwardButton;
 
 	@FXML
+	private Button _quizButton;
+
+	@FXML
 	private Button muteButton;
 
 	@FXML
@@ -126,23 +129,23 @@ public class MainMenuController implements Initializable{
 				//e.printStackTrace();
 			}
 			if(_actionsSet) {
-			player_.SetOnForwardAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent arg0) {
-					playNext();
-				}
-			});
-			player_.SetOnBackwardAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent arg0) {
-					if(player_.getTimeMillis()>=player_.getTotalDuration()/5) {
-						player_.setTime(new Duration(0));
-					} else {
-						playPrev();
+				player_.SetOnForwardAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent arg0) {
+						playNext();
 					}
-				}
 				});
-			_actionsSet=true;
+				player_.SetOnBackwardAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent arg0) {
+						if(player_.getTimeMillis()>=player_.getTotalDuration()/5) {
+							player_.setTime(new Duration(0));
+						} else {
+							playPrev();
+						}
+					}
+				});
+				_actionsSet=true;
 			}
 		}
 	}
@@ -176,6 +179,15 @@ public class MainMenuController implements Initializable{
 		HBox selectedItem = videoListView.getSelectionModel().getSelectedItem();
 		if(selectedItem instanceof VideoBar) {
 			((VideoBar) selectedItem).delete();
+		}
+	}
+
+	@FXML
+	void handleQuiz(ActionEvent event) {
+		if(_creations.size()>2) {
+			Main.changeScene("QuizMenu.fxml", this);
+		}else {
+			error("PLease at least have 3 creations");
 		}
 	}
 
@@ -221,8 +233,7 @@ public class MainMenuController implements Initializable{
 				}
 				//This adds the videoPlayer to the scene
 				player_ = new MediaBox();
-				//This controls how forward/backward buttons work
-				
+
 
 
 				_hbox.getChildren().add(player_);	
@@ -231,19 +242,31 @@ public class MainMenuController implements Initializable{
 					setNewMedia();
 				}
 
-				}
-			});
-		}
-
-		public void playPrev() {
-			videoListView.getSelectionModel().selectPrevious();
-			setNewMedia();
-		}
-		public void playNext() {
-
-			videoListView.getSelectionModel().selectNext();
-			setNewMedia();
-		}
-
-
+			}
+		});
 	}
+
+	public void playPrev() {
+		videoListView.getSelectionModel().selectPrevious();
+		setNewMedia();
+	}
+	public void playNext() {
+
+		videoListView.getSelectionModel().selectNext();
+		setNewMedia();
+	}
+
+	/**
+	 * helper method that creates a popup when an error occurs
+	 * @param msg
+	 */
+	public void error(String msg) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("ERROR "+msg);
+		alert.setHeaderText("ERROR");
+		alert.setContentText(msg);
+		alert.showAndWait();
+	}
+
+}
+
