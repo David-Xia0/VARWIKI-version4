@@ -152,7 +152,7 @@ public class MainMenuController implements Initializable{
 		
 		HBox currentSelection = (HBox) videoListView.getSelectionModel().getSelectedItem();
 		Text asText = (Text)currentSelection.getChildren().get(0);
-		String data = Main.getPathToResources() + "/templates/" +  asText.getText() + ".class";
+		String data = Main.getPathToResources() + "/templates/" +  asText.getText() + "/info.class";
 		try {
 			FileInputStream fileIn = new FileInputStream(data);
 			ObjectInputStream object = new ObjectInputStream(fileIn);

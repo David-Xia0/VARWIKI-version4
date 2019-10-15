@@ -744,8 +744,8 @@ public class CreateMenuController implements Initializable{
 		String text = data.getText();
 		String path = "./resources/templates/" + data.getName();
 		_videoName.setText(data.getName());
-		_team.submit(new RunBash("cp -rf " + path +"/images ./resources/temp/images"));
-		Future<?> doneAudio = _team.submit(new RunBash("cp -rf " + path +"/audio ./resources/temp/audio"));
+		_team.submit(new RunBash("cp -rf " + path +"/images ./resources/temp"));
+		Future<?> doneAudio = _team.submit(new RunBash("cp -rf " + path +"/audio ./resources/temp"));
 		try {
 			//forces code to wait for task completion
 			doneAudio.get();
@@ -770,18 +770,19 @@ public class CreateMenuController implements Initializable{
 			Optional<ButtonType> result = alert.showAndWait();
 			if(result.get() != ButtonType.OK) {
 				return;
+			}else {
+				template.delete();
 			}
 
 		}
 		template.mkdir();
-		_team.submit(new RunBash("cp -rf ./resources/temp/images "+ path+"/images"));
-		_team.submit(new RunBash("cp -rf ./resources/temp/audio "+ path+"/audio"));
+		_team.submit(new RunBash("cp -rf ./resources/temp/images "+ path));
+		_team.submit(new RunBash("cp -rf ./resources/temp/audio "+ path));
 		
 		FileOutputStream fos;
 		try {
 			File file = new File(Main.getPathToResources() + "/templates/"+_videoName.getText() + "/info.class");
-			System.out.println(file.getAbsolutePath());
-			file.createNewFile();
+			//file.createNewFile();
 			fos = new FileOutputStream(Main.getPathToResources() + "/templates/"+_videoName.getText() + "/info.class");
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			TemplateData data = new TemplateData(this);
