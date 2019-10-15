@@ -2,6 +2,10 @@ package application.scenebuilder;
 
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -48,6 +52,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import jdk.jfr.EventType;
 import application.*;
+import application.Main.SceneType;
 
 /**
  * manages main menu
@@ -59,17 +64,10 @@ public class MainMenuController implements Initializable{
 
 	private ExecutorService _team = Executors.newSingleThreadExecutor(); 
 	private List<String> _creations = new ArrayList<String>();
-	private enum State{
-		EMPTY,
-		PLAYING,
-		PAUSED,
-		FINISHED
-	};
-	private MainMenuController _this;
+
 
 	private ObservableList<HBox> _videoList = FXCollections.observableArrayList();
 
-	private State _state = State.EMPTY;
 	@FXML
 	private Button createButton;
 
@@ -105,7 +103,6 @@ public class MainMenuController implements Initializable{
 
 	@FXML
 	private ListView<HBox> videoListView;
-	private boolean _muted = false;
 
 	private MediaBox player_;
 	private boolean _actionsSet;
@@ -150,6 +147,30 @@ public class MainMenuController implements Initializable{
 		}
 	}
 
+	@FXML
+	public void testSerial() {
+		
+		HBox currentSelection = (HBox) videoListView.getSelectionModel().getSelectedItem();
+		Text asText = (Text)currentSelection.getChildren().get(0);
+		String data = Main.getPathToResources() + "/templates/" +  asText.getText() + ".class";
+		try {
+			FileInputStream fileIn = new FileInputStream(data);
+			ObjectInputStream object = new ObjectInputStream(fileIn);
+			TemplateData template = (TemplateData) object.readObject();
+			CreateMenuController controller = (CreateMenuController) exit(SceneType.CreateMenu);
+			controller.setup(template);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 	/**
 	 * eventhandler for button
@@ -167,7 +188,7 @@ public class MainMenuController implements Initializable{
 	void handleCreate() {
 
 		player_.pause();
-		Main.changeScene("Search.fxml", this);
+		exit(SceneType.Search);
 	}
 
 	/**
@@ -185,7 +206,7 @@ public class MainMenuController implements Initializable{
 	@FXML
 	void handleQuiz(ActionEvent event) {
 		if(_creations.size()>2) {
-			Main.changeScene("QuizMenu.fxml", this);
+			exit(SceneType.QuizMenu);
 		}else {
 			error("PLease at least have 3 creations");
 		}
@@ -198,8 +219,6 @@ public class MainMenuController implements Initializable{
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		_state = State.EMPTY;
-		_this = this;
 
 		/*
 		 * this loads the current stored videos and loads the video player with the first stored video.
@@ -266,6 +285,10 @@ public class MainMenuController implements Initializable{
 		alert.setHeaderText("ERROR");
 		alert.setContentText(msg);
 		alert.showAndWait();
+	}
+	
+	private Object exit(SceneType location) {
+		return Main.changeScene(location, this);
 	}
 
 }

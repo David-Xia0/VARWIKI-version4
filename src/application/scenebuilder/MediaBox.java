@@ -103,7 +103,10 @@ public class MediaBox extends AnchorPane{
 
 
 
-
+	@FXML 
+	public void initialize() {
+		
+	}
 
 	/**
 	 * constructor

@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 import application.Main;
 import application.RunBash;
 import application.VideoBar;
+import application.Main.SceneType;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -63,7 +64,7 @@ public class QuizMenuController {
 
 	@FXML
 	void handleReturn(ActionEvent event) {
-		Main.changeScene("MainMenu.fxml", this);
+		exit(SceneType.MainMenu);
 	}
 
 	@FXML
@@ -106,5 +107,10 @@ public class QuizMenuController {
 			
 		}
 	}
+	
+	private Object exit(SceneType location) {
+		return Main.changeScene(location, this);
+	}
+
 }
 

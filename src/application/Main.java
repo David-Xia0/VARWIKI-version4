@@ -1,6 +1,7 @@
 package application;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.net.URISyntaxException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,13 +22,28 @@ public class Main extends Application {
 	private static ExecutorService _team = Executors.newSingleThreadExecutor(); 
 	private static Stage _stage;
 	
+	
+	public enum SceneType{
+		MainMenu("MainMenu.fxml"),
+		CreateMenu("CreateMenu.fxml"),
+		Search("Search.fxml"),
+		QuizMenu("QuizMenu.fxml");
+		private String fileName;
+		private SceneType(String name) {
+			fileName = name;
+		}
+		private String getFile() {
+			return fileName;
+		}
+	}
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
 		//Initiate the first Scene
 	
 		_stage=primaryStage;
-		changeScene("scenebuilder/MainMenu.fxml",this);
+		changeScene(SceneType.MainMenu,this);
 		//Sets the whole program to close when application window is closed
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 
@@ -47,8 +63,8 @@ public class Main extends Application {
 	 * @param fxml
 	 * @param location
 	 */
-	public static Object changeScene(String fxml, Object location) {
-		return changeScene(fxml,location,true);
+	public static Object changeScene(SceneType sceneType, Object location) {
+		return changeScene(sceneType,location,true);
 	}
 	
 	/**
@@ -56,17 +72,20 @@ public class Main extends Application {
 	 * @param fxml
 	 * @param location
 	 */
-	public static Object changeScene(String fxml, Object location, boolean destroyFiles) {
+	public static Object changeScene(SceneType sceneType, Object location, boolean destroyFiles) {
 		if(destroyFiles) {
 			initiateFileSystem();
 		}
 		try {
 			 FXMLLoader loader = new FXMLLoader();
-		        loader.setLocation(location.getClass().getResource(fxml));
-		        Parent layout = loader.load();
+		        loader.setLocation(location.getClass().getResource(sceneType.getFile()));
+		        String fxmlDocPath = System.getProperty("user.dir") + "/src/application/scenebuilder/"+ sceneType.getFile();
+		        FileInputStream fxmlStream = new FileInputStream(fxmlDocPath);
+		        Parent layout = loader.load(fxmlStream);
 		        Scene scene = new Scene(layout);
 		        _stage.setScene(scene);
 		        _stage.show();
+		        
 		        return loader.getController();
 			}catch(Exception e) {
 				e.printStackTrace();
@@ -80,7 +99,7 @@ public class Main extends Application {
 	 */
 	public static void initiateFileSystem() {
 		_team.submit(new RunBash("rm -r ./resources/temp"));
-		_team.submit(new RunBash("mkdir ./resources ./resources/VideoCreations ./resources/temp ./resources/temp/images"));
+		_team.submit(new RunBash("mkdir ./resources ./resources/VideoCreations ./resources/temp ./resources/temp/images ./resources/temp/audio ./resources/templates"));
 	}
 
 

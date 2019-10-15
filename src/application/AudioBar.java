@@ -105,7 +105,7 @@ public class AudioBar extends HBox{
 		}
 		_play=true;
 		System.out.println(_name);
-		RunBash audioCreation = new RunBash("play ./resources/temp/"+_name+".wav");
+		RunBash audioCreation = new RunBash("play ./resources/temp/audio/"+_name+".wav");
 		_team.submit(audioCreation);
 		audioCreation.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 			@Override
@@ -116,7 +116,7 @@ public class AudioBar extends HBox{
 	}
 	
 	public String toString() {
-		return " ./resources/temp/" + _name;
+		return " ./resources/temp/audio/" + _name;
 	}
 
 

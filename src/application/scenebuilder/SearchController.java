@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import application.GetFlickr;
 import application.Main;
 import application.RunBash;
+import application.Main.SceneType;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -37,7 +38,7 @@ public class SearchController {
 	 */
 	@FXML
 	void back(){
-		Main.changeScene("MainMenu.fxml", this);
+		exit(SceneType.MainMenu);
 	}
 
 	/**
@@ -71,7 +72,7 @@ public class SearchController {
 					//checks if search was successful or not
 					if(text.contentEquals(term + " not found :^(" )) {
 						Main.error("search term not found");
-						Main.changeScene("Search.fxml", this);
+						exit(SceneType.Search);
 						return;
 					}
 
@@ -82,7 +83,7 @@ public class SearchController {
 						@Override
 						public void handle(WorkerStateEvent event) {
 
-							CreateMenuController controller = (CreateMenuController)Main.changeScene("CreateMenu.fxml", this,false);
+							CreateMenuController controller = (CreateMenuController)exit(SceneType.CreateMenu,false);
 							controller.setup(text,term);
 						}
 					});
@@ -94,5 +95,12 @@ public class SearchController {
 		});
 
 	}
+	private Object exit(SceneType location) {
+		return exit(location, true);
+	}	
+	private Object exit(SceneType location,boolean destroy) {
+		return Main.changeScene(location, this, destroy);
+	}
+
 }
 

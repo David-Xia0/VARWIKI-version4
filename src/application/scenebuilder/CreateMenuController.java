@@ -1,6 +1,12 @@
 package application.scenebuilder;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.lang.ProcessHandle.Info;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +15,10 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import application.AudioBar;
+import application.Main.SceneType;
 import application.RunBash;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -50,7 +58,9 @@ import application.*;
  * 
  *
  */
-public class CreateMenuController implements Initializable {
+public class CreateMenuController implements Initializable{
+
+
 
 	private ObservableList<HBox> _audioList = FXCollections.observableArrayList();
 	private ExecutorService _team = Executors.newSingleThreadExecutor(); 
@@ -62,6 +72,10 @@ public class CreateMenuController implements Initializable {
 
 	@FXML
 	private Button _playButton;
+
+	@FXML
+	private Button _saveButton;
+
 
 	@FXML 
 	private ProgressIndicator _loading;
@@ -90,7 +104,7 @@ public class CreateMenuController implements Initializable {
 	private Button _testButton;
 
 	@FXML
-	private Button _saveButton;
+	private Button _saveTemplateButton;
 
 	@FXML
 	private TextArea _displayTextArea;
@@ -115,6 +129,7 @@ public class CreateMenuController implements Initializable {
 	private boolean _saving=false;
 	private boolean _defaultImages=true;
 	private int _i;
+	private TemplateData _template;
 
 
 	/**
@@ -126,6 +141,8 @@ public class CreateMenuController implements Initializable {
 		voices.addAll("Default","(voice_akl_nz_cw_cg_cg)","(voice_akl_nz_jdt_diphone)");
 		_festivalVoice.setItems(voices);
 	}
+
+
 
 	/**
 	 * this saves all text in box, regardless of what is selected
@@ -159,13 +176,27 @@ public class CreateMenuController implements Initializable {
 		if(_videoName.getText().isBlank()) {
 			error("No Name set");
 			return;
-		}else if(_audioList.isEmpty()){
+		}
+		if(_audioList.isEmpty()){
 			boolean confirmed = noText();
 			if (!confirmed){
 				return;
 			}
 			saveAllAudio();
 		}
+
+
+		if(_template != null && _template.getName()!=_videoName.getText()) {
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Are you sure?");
+			alert.setHeaderText("Name change detected");
+			alert.setContentText("Do you want to create a new creation?");
+			Optional<ButtonType> result = alert.showAndWait();
+			if(result.get() != ButtonType.OK) {
+				return;
+			}
+		}
+
 		_loading.setVisible(true);
 		_createButton.setVisible(false);
 		while(_saving) {
@@ -261,13 +292,13 @@ public class CreateMenuController implements Initializable {
 								@Override
 								public void handle(WorkerStateEvent event) {
 									_runningThread=false;
-									Main.changeScene("MainMenu.fxml", this);
+									exit();
 								}
 							});
 						} catch (NumberFormatException | InterruptedException | ExecutionException e) {
 							error("Video Creation Failed");
 							_runningThread=false;
-							Main.changeScene("MainMenu.fxml", this);
+							exit();
 						}
 					}
 				});
@@ -302,7 +333,7 @@ public class CreateMenuController implements Initializable {
 		alert.setContentText("Do you still want to EXIT?");
 		Optional<ButtonType> result = alert.showAndWait();
 		if(result.get() == ButtonType.OK) {
-			Main.changeScene("MainMenu.fxml", this);
+			exit();
 		}
 
 	}
@@ -318,7 +349,7 @@ public class CreateMenuController implements Initializable {
 		alert.setContentText("Do you still want to start a new search?");
 		Optional<ButtonType> result = alert.showAndWait();
 		if(result.get() == ButtonType.OK) {
-			Main.changeScene("Search.fxml", this);
+			exit(SceneType.Search);
 		}
 
 	}
@@ -338,6 +369,9 @@ public class CreateMenuController implements Initializable {
 			return false;
 		}
 
+	}
+	public boolean usingImages() {
+		return _imageSelection.isSelected();
 	}
 
 	/**
@@ -414,6 +448,7 @@ public class CreateMenuController implements Initializable {
 		handleSaveAudio(20);
 	}
 	void handleSaveAudio(int length) {
+		_team.submit(new RunBash("mkdir ./resources/temp/tmpaudio"));
 		_cancel = false;
 		int maxLength = length;
 		_saving = true;
@@ -459,11 +494,12 @@ public class CreateMenuController implements Initializable {
 				}
 				String audioFileNames="";
 				for(int i =0; i<audioList.size(); i++) {
-					audioFileNames = audioFileNames+ "./resources/temp/" + i+"tmp.wav ";	
+					audioFileNames = audioFileNames+ "./resources/temp/tmpaudio/" + i+".wav ";	
 				}	
 				System.out.println(audioFileNames);
-				RunBash mergeAudio = new RunBash("sox "+ audioFileNames + "./resources/temp/" + audioCount + ".wav");
+				RunBash mergeAudio = new RunBash("sox "+ audioFileNames + "./resources/temp/audio/" + audioCount + ".wav");
 				_team.submit(mergeAudio);	
+				_team.submit(new RunBash("rm -rf ./resources/temp/tmpaudio"));
 				mergeAudio.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
 					@Override
@@ -494,9 +530,9 @@ public class CreateMenuController implements Initializable {
 		String voice = _festivalVoice.getSelectionModel().getSelectedItem();
 
 		if( voice ==null || voice.contentEquals("Default") ) {
-			audioCreation = new RunBash("echo \"" + selectedText + "\" | text2wave -o ./resources/temp/"+ audiocount + tmp + ".wav");
+			audioCreation = new RunBash("echo \"" + selectedText + "\" | text2wave -o ./resources/temp/tmpaudio/"+ audiocount + ".wav");
 		}else {
-			audioCreation = new RunBash("echo \"" + selectedText + "\" | text2wave -o ./resources/temp/"+ audiocount + tmp + ".wav " + "-eval \""+_festivalVoice.getSelectionModel().getSelectedItem()+"\"");
+			audioCreation = new RunBash("echo \"" + selectedText + "\" | text2wave -o ./resources/temp/tmpaudio/"+ audiocount + ".wav " + "-eval \""+_festivalVoice.getSelectionModel().getSelectedItem()+"\"");
 			audioCreation.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 				@Override
 				public void handle(WorkerStateEvent event) {
@@ -660,6 +696,34 @@ public class CreateMenuController implements Initializable {
 		alert.showAndWait();
 	}
 
+	/**
+	 * helper method that creates a popup when an error occurs
+	 * @param msg
+	 */
+	public void notification(String msg) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(msg);
+		alert.setHeaderText("Done");
+		alert.setContentText(msg);
+		alert.showAndWait();
+	}
+
+
+	/**
+	 * passes Search info to scene
+	 * @param text
+	 * @param term
+	 * @param fromTemplate (does a template already exist)
+	 */
+	public void setup(String text, String term,TemplateData template) {
+		_displayTextArea.setText(text);
+		_term = term;
+		_festivalVoice.getSelectionModel().clearAndSelect(0);
+		
+		_runningThread = false;
+		initializeSetImages();
+		_template=template;
+	}
 
 	/**
 	 * passes Search info to scene
@@ -667,11 +731,94 @@ public class CreateMenuController implements Initializable {
 	 * @param term
 	 */
 	public void setup(String text, String term) {
-		_displayTextArea.setText(text);
-		_term = term;
-		_festivalVoice.getSelectionModel().clearAndSelect(0);
-		_videoName.setText(_term);
-		_runningThread = false;
-		initializeSetImages();
+		_videoName.setText(term);
+		setup(text,term,null);
 	}
+
+	/**
+	 * passes Template data info to scene
+	 * @param data
+	 */
+	public void setup(TemplateData data) {
+		String term = data.getTerm();
+		String text = data.getText();
+		String path = "./resources/templates/" + data.getName();
+		_videoName.setText(data.getName());
+		_team.submit(new RunBash("cp -rf " + path +"/images ./resources/temp/images"));
+		Future<?> doneAudio = _team.submit(new RunBash("cp -rf " + path +"/audio ./resources/temp/audio"));
+		try {
+			//forces code to wait for task completion
+			doneAudio.get();
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		_imageSelection.setSelected(data.usingImages());
+		setup(text,term,data);
+	}
+
+
+	private void handleSaveTemplate(){
+		String path = "./resources/templates/" + _videoName.getText();
+		File template = new File(path);
+		if(template.exists()) {
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Overwrite existing template?");
+			alert.setHeaderText("Template with this name already exists");
+			alert.setContentText("Overwrite with changes?");
+			Optional<ButtonType> result = alert.showAndWait();
+			if(result.get() != ButtonType.OK) {
+				return;
+			}
+
+		}
+		template.mkdir();
+		_team.submit(new RunBash("cp -rf ./resources/temp/images "+ path+"/images"));
+		_team.submit(new RunBash("cp -rf ./resources/temp/audio "+ path+"/audio"));
+		
+		FileOutputStream fos;
+		try {
+			File file = new File(Main.getPathToResources() + "/templates/"+_videoName.getText() + "/info.class");
+			System.out.println(file.getAbsolutePath());
+			file.createNewFile();
+			fos = new FileOutputStream(Main.getPathToResources() + "/templates/"+_videoName.getText() + "/info.class");
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			TemplateData data = new TemplateData(this);
+			oos.writeObject(data);
+			oos.close();
+			notification(_videoName.getText() + " saved");
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void exit(SceneType location) {
+		handleSaveTemplate();
+		Main.changeScene(location, this);
+	}
+
+	//exits to default location
+	private void exit() {
+		exit(SceneType.MainMenu);
+	}
+
+	public String getText() {
+		return _displayTextArea.getText();
+	}
+
+	public String getName() {
+		return _videoName.getText();
+	}
+
+	public String getTerm() {
+		return _term;
+	}
+	
+
 }
