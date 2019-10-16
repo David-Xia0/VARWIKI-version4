@@ -115,8 +115,16 @@ public class AudioBar extends HBox{
 		});
 	}
 	
+	public String getName() {
+		return _name;
+	}
+	
 	public String toString() {
 		return " ./resources/temp/audio/" + _name;
+	}
+	
+	public String getText() {
+		return _text.getText();
 	}
 
 

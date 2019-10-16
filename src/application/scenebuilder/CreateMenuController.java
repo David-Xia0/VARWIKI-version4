@@ -753,7 +753,20 @@ public class CreateMenuController implements Initializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		for(String file: data.getOrder()) {
+			new AudioBar(data.getText(audioCount),file,_audioList);
+			audioCount++;
+		}
+		_audioBox.setItems(_audioList);
+		/*
+		File folder = new File("./resources/temp/audio");
+		for(int i=0; i<folder.listFiles().length; i++) {
+			System.out.println(audioCount);
+			new AudioBar(data.getText(audioCount),""+i,_audioList);
+			_audioBox.setItems(_audioList);
+			audioCount++;
+		}
+		*/
 		_imageSelection.setSelected(data.usingImages());
 		setup(text,term,data);
 	}
@@ -820,6 +833,30 @@ public class CreateMenuController implements Initializable{
 	public String getTerm() {
 		return _term;
 	}
-	
 
+
+
+	public List<String> getAudioText() {
+		List<String> audioText = new ArrayList<String>();
+		for(Node node : _audioList) {
+		
+			//if(node.getClass().getName() == "application.scenebuilder.AudioBar") {
+				audioText.add(((AudioBar) node).getText());
+			//}
+	
+		}
+		
+		return audioText;
+	}
+	
+	public List<String> fileOrder() {
+		List<String> files = new ArrayList<String>();
+		for(Node node : _audioList) {
+			//if(node.getClass().getName() == "application.scenebuilder.AudioBar") {
+				files.add(((AudioBar) node).getName());
+			//}
+	
+		}
+		return files;
+	}
 }
