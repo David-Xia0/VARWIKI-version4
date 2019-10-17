@@ -31,11 +31,11 @@ public class SetImagesController implements Initializable{
 
 	@FXML
 	private GridPane _mainPane;
-	
+
 	@FXML
 	private Button _resetButton;
-	
-	
+
+
 	private ExecutorService _team = Executors.newSingleThreadExecutor(); 
 	private List<String> _images = new ArrayList<String>();
 	private ObservableList<ImageElement> _imageList;
@@ -58,37 +58,37 @@ public class SetImagesController implements Initializable{
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
-				
-					_imageList = FXCollections.observableArrayList();
-					int i =0;
-					for(String image:_images) {
-						ImageElement displayImage = new ImageElement(image);
-						_imageList.add(displayImage);
-						_mainPane.add(displayImage, i%3, i/3);
-						i++;	
-					}
-					
-				
+
+
+				_imageList = FXCollections.observableArrayList();
+				int i =0;
+				for(String image:_images) {
+					ImageElement displayImage = new ImageElement(image);
+					_imageList.add(displayImage);
+					_mainPane.add(displayImage, i%3, i/3);
+					i++;	
+				}
+
+
 			}
 		});
 	}
-	
-	
+
+
 	public void construct(CreateMenuController parent) {
 		_parent=parent;
 	}
-	
+
 	@FXML
 	void selectAll(ActionEvent event) {
 		selectAllNone(true);
 	}
-	
+
 	@FXML
-	void selectNone(ActionEvent event) {
+	void selectNone() {
 		selectAllNone(false);
 	}
-	
+
 	/**
 	 * helper for selection buttons
 	 * @param all
@@ -108,7 +108,7 @@ public class SetImagesController implements Initializable{
 			}
 		}
 	}
-	
+
 	/**
 	 * hides window
 	 * @param event
@@ -117,22 +117,30 @@ public class SetImagesController implements Initializable{
 	public void handleDone(ActionEvent event) {
 		_parent.popdownSetImages();
 	}
-	
-	/**
-	 * returns list of selected images
-	 * @return
-	 */
-	public List<ImageElement> getSelectedImages(){
-		List<ImageElement> selected = new ArrayList<ImageElement>();
-	
-		for(ImageElement i:_imageList) {
-			if(i.isSelected()) {
-				selected.add(i);
-			}
+
+	public void setSelectedImages(List<String> SelectedImages) {
+		selectNone();
+		for(String i : SelectedImages) {
+			_imageList.get(Integer.parseInt(i)).setSelected(true);
+
 		}
-		return selected;
 	}
-	
-	  
+
+/**
+ * returns list of selected images
+ * @return
+ */
+public List<ImageElement> getSelectedImages(){
+	List<ImageElement> selected = new ArrayList<ImageElement>();
+
+	for(ImageElement i:_imageList) {
+		if(i.isSelected()) {
+			selected.add(i);
+		}
+	}
+	return selected;
+}
+
+
 
 }

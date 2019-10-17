@@ -52,7 +52,9 @@ public class VideoBar extends HBox{
 				@Override
 				public void handle(ActionEvent event) {
 					RunBash delete = new RunBash("rm -f ./resources/VideoCreations/"+_name.getText()+".mp4");
+					RunBash delete2 = new RunBash("rm -rf ./resources/templates/"+_name.getText());
 					_team.submit(delete);
+					_team.submit(delete2);
 					_parent.remove(_bar);	
 
 					if(_parent.isEmpty()) {

@@ -47,6 +47,12 @@ public class ImageElement extends AnchorPane{
 				e.printStackTrace();	
 			}
     }
+    
+    public void setSelected(boolean selected) {
+    	if(_isSelected!=selected) {
+    		handleImageClicked();
+    	}
+    }
 
     /**
      * returns boolean. If image is selected as video output

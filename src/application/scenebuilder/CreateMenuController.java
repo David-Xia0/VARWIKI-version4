@@ -432,7 +432,7 @@ public class CreateMenuController implements Initializable{
 
 
 	public void popdownSetImages() {
-		_stage.hide();;
+		_stage.close();
 	}
 
 	private void popupSetImages() {
@@ -524,9 +524,7 @@ public class CreateMenuController implements Initializable{
 	private RunBash saveAudio(String selectedText){
 		int audiocount;
 		RunBash audioCreation;
-		String tmp = "";
 		audiocount = _i;
-		tmp = "tmp";
 		String voice = _festivalVoice.getSelectionModel().getSelectedItem();
 
 		if( voice ==null || voice.contentEquals("Default") ) {
@@ -640,7 +638,7 @@ public class CreateMenuController implements Initializable{
 	 * 
 	 * @return currently selected images (default is all images selected)
 	 */
-	private List<String> getSelectedImages() {
+	public List<String> getSelectedImages() {
 		List<String> images = new ArrayList<String>();
 		List<ImageElement> elements = _controller.getSelectedImages();
 
@@ -742,6 +740,9 @@ public class CreateMenuController implements Initializable{
 	public void setup(TemplateData data) {
 		String term = data.getTerm();
 		String text = data.getText();
+			setup(text,term,data);
+			//this is currently kinda glitchy (ie it doesnt work)
+		//_controller.setSelectedImages(data.getSelectedImages());
 		String path = "./resources/templates/" + data.getName();
 		_videoName.setText(data.getName());
 		_team.submit(new RunBash("cp -rf " + path +"/images ./resources/temp"));
@@ -768,7 +769,7 @@ public class CreateMenuController implements Initializable{
 		}
 		*/
 		_imageSelection.setSelected(data.usingImages());
-		setup(text,term,data);
+
 	}
 
 
