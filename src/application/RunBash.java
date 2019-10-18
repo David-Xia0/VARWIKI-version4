@@ -47,6 +47,7 @@ public class RunBash extends Task<List<String>>{
 		try {
 
 			Process process = _pb.start();
+			process.getInputStream();
 
 			exitStatus=process.waitFor();
 			BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
