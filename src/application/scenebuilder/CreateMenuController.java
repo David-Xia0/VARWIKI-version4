@@ -1,6 +1,7 @@
 package application.scenebuilder;
 
 import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import application.functionality.*;
 import application.AudioBar;
 import application.Main.SceneType;
 import application.RunBash;
@@ -292,6 +294,8 @@ public class CreateMenuController implements Initializable{
 							createVideo2.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 								@Override
 								public void handle(WorkerStateEvent event) {
+									//I used this to test the back gound music function
+									//(new BGM("CallingOnDolphins")).mergeBGM(__videoName,audioLength);
 									_runningThread=false;
 									exit();
 								}
