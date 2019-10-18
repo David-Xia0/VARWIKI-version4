@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
@@ -10,15 +9,16 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.scenebuilder.QuizMenuController">
    <children>
       <Button fx:id="_backButton" layoutX="729.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleReturn" style="-fx-background-color: f10101;" text="back" />
-      <Button fx:id="_checkButton" layoutX="276.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleCheckAnswer" style="-fx-background-color: lightblue;" text="Check Answer" />
-      <TextField fx:id="_answerField" layoutX="96.0" layoutY="560.0" />
-      <Text layoutX="78.0" layoutY="544.0" strokeType="OUTSIDE" strokeWidth="0.0" text="What do you think is the topic?" />
-      <Button fx:id="_giveUpButton" layoutX="400.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleGiveUp" style="-fx-background-color: f10101;" text="Give Up" />
-      <HBox fx:id="_hbox" layoutX="87.0" layoutY="132.0" prefHeight="355.0" prefWidth="423.0" />
+      <HBox fx:id="_hbox" layoutX="47.0" layoutY="151.0" prefHeight="355.0" prefWidth="423.0" />
       <Text layoutX="242.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Guess the Topic">
          <font>
             <Font size="36.0" />
          </font>
       </Text>
+      <Button fx:id="_guess1Button" layoutX="542.0" layoutY="237.0" mnemonicParsing="false" onAction="#handleCheckAnswer" prefHeight="80.0" prefWidth="80.0" text="Button" />
+      <Button fx:id="_guess2Button" layoutX="645.0" layoutY="237.0" mnemonicParsing="false" onAction="#handleCheckAnswer" prefHeight="80.0" prefWidth="80.0" text="Button" />
+      <Button fx:id="_guess3Button" layoutX="542.0" layoutY="338.0" mnemonicParsing="false" onAction="#handleCheckAnswer" prefHeight="80.0" prefWidth="80.0" text="Button" />
+      <Button fx:id="_guess4Button" layoutX="645.0" layoutY="338.0" mnemonicParsing="false" onAction="#handleCheckAnswer" prefHeight="80.0" prefWidth="80.0" text="Button" />
+      <Text layoutX="562.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Guess What Topic It is" />
    </children>
 </AnchorPane>
