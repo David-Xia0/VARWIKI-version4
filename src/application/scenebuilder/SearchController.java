@@ -17,24 +17,27 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 
 /**
- * handles search scene
- * @author student
+ * This scene Requests the user for a input search term.
+ * The search term is then processed all data from wikipedia and flickr is obtained according to the term
  *
  */
 public class SearchController {
 
-	@FXML
-	private Button _searchButton,_backButton;
 	private ExecutorService _team = Executors.newSingleThreadExecutor();
 	private boolean _runningThread;
+	
+	@FXML
+	private Button _searchButton,_backButton;
+	
 	@FXML
 	private TextField _term;
+	
 	@FXML
 	private ProgressIndicator _searching;
 	
 	
 	/**
-	 * returns to menu
+	 * If the user decides to he can return to the main menu screen
 	 */
 	@FXML
 	void back(){
@@ -42,7 +45,7 @@ public class SearchController {
 	}
 
 	/**
-	 * If there is an entered term, the term is searched on wikipedia
+	 * If the search button is presesd, and there is a term entered. We check if the term is a "good" term and then obtain other data.
 	 * @param event
 	 */
 	@FXML
@@ -57,11 +60,13 @@ public class SearchController {
 		_searchButton.setVisible(false);
 		_searching.setVisible(true);
 
-		//wiki search bash command is created and run on another thread
+		//wiki search bash command is used to obtain wikipedia information about the term
 		RunBash command = new RunBash("wikit "+ term);
 		_team.submit(command);
 		_runningThread = true;
+		
 		command.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+			
 			@Override
 			public void handle(WorkerStateEvent event) {
 				String text;
@@ -69,35 +74,47 @@ public class SearchController {
 
 				try {
 					text = command.get().get(0);
-					//checks if search was successful or not
+					//checks if search was successful or not, and returns error
 					if(text.contentEquals(term + " not found :^(" )) {
 						Main.error("search term not found");
 						exit(SceneType.Search);
 						return;
 					}
 
-
+					//gets flickr images using search term
 					GetFlickr imageDown = new GetFlickr(term, 9);
 					_team.submit(imageDown);
 					imageDown.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 						@Override
 						public void handle(WorkerStateEvent event) {
-
 							CreateMenuController controller = (CreateMenuController)exit(SceneType.CreateMenu,false);
 							controller.setup(text,term);
 						}
 					});
+					
 				} catch (InterruptedException | ExecutionException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		});
-
 	}
+	
+	/**
+	 * change screen, and clear temp folder by default
+	 * @param location
+	 * @return
+	 */
 	private Object exit(SceneType location) {
 		return exit(location, true);
 	}	
+	
+	/**
+	 * change screen, but we cna determine if we want to clear the temp folder or not
+	 * @param location
+	 * @param destroy
+	 * @return
+	 */
 	private Object exit(SceneType location,boolean destroy) {
 		return Main.changeScene(location, this, destroy);
 	}

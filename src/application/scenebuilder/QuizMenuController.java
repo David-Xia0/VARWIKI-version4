@@ -157,7 +157,7 @@ public class QuizMenuController {
 	private void setNewMedia() {
 		//setup(currentSelection);	
 		String creation = _creations.get((int) randomCreation);
-
+		
 		URL mediaUrl;
 		try {
 			mediaUrl = new File(Main.getPathToResources() + "/VideoCreations/"+creation+".mp4").toURI().toURL();

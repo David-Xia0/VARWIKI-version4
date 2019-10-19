@@ -55,8 +55,10 @@ import application.*;
 import application.Main.SceneType;
 
 /**
- * manages main menu
- * @author student
+ * 
+ * controller for the Main menu Scene.
+ * This is the users first interactive screen where previous creations can be deleted and played back.
+ * Can also access create new creations page and Go to matching quiz game
  *
  */
 public class MainMenuController implements Initializable{
@@ -64,8 +66,8 @@ public class MainMenuController implements Initializable{
 
 	private ExecutorService _team = Executors.newSingleThreadExecutor(); 
 	private List<String> _creations = new ArrayList<String>();
-
-
+	private MediaBox _playerBox;
+	private boolean _actionsSet;
 	private ObservableList<HBox> _videoList = FXCollections.observableArrayList();
 
 	@FXML
@@ -104,16 +106,16 @@ public class MainMenuController implements Initializable{
 	@FXML
 	private ListView<HBox> videoListView;
 
-	private MediaBox player_;
-	private boolean _actionsSet;
 
 
 	/**
-	 * sets new media to video player
+	 * Sets the selected video into our Media player
+	 * Previews the first frame of the video and generates button functionality
 	 */
 	private void setNewMedia() {
 		HBox currentSelection = (HBox) videoListView.getSelectionModel().getSelectedItem();
-		//setup(currentSelection);	
+
+		//Checks if selection value is null or not, selection value can be null when there are no videos
 		if( currentSelection!=null){
 			Text asText = (Text)currentSelection.getChildren().get(0);
 
@@ -121,22 +123,24 @@ public class MainMenuController implements Initializable{
 			try {
 				mediaUrl = new File(Main.getPathToResources() + "/VideoCreations/"+asText.getText()+".mp4").toURI().toURL();
 				Media newMedia = new Media(mediaUrl.toExternalForm());
-				player_.setMedia(newMedia);
+				_playerBox.setMedia(newMedia);
 			} catch (Exception e) {
 				//e.printStackTrace();
 			}
+
+			//sets button funcitonality in Video Player
 			if(_actionsSet) {
-				player_.SetOnForwardAction(new EventHandler<ActionEvent>() {
+				_playerBox.SetOnForwardAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent arg0) {
 						playNext();
 					}
 				});
-				player_.SetOnBackwardAction(new EventHandler<ActionEvent>() {
+				_playerBox.SetOnBackwardAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent arg0) {
-						if(player_.getTimeMillis()>=player_.getTotalDuration()/5) {
-							player_.setTime(new Duration(0));
+						if(_playerBox.getTimeMillis()>=_playerBox.getTotalDuration()/5) {
+							_playerBox.setTime(new Duration(0));
 						} else {
 							playPrev();
 						}
@@ -147,9 +151,14 @@ public class MainMenuController implements Initializable{
 		}
 	}
 
+	
+	/**
+	 * Modify Existing Video Creation
+	 * Goes to create Menu and loads existing template from video
+	 */
 	@FXML
 	public void testSerial() {
-		
+
 		HBox currentSelection = (HBox) videoListView.getSelectionModel().getSelectedItem();
 		Text asText = (Text)currentSelection.getChildren().get(0);
 		String data = Main.getPathToResources() + "/templates/" +  asText.getText() + "/info.class";
@@ -169,11 +178,11 @@ public class MainMenuController implements Initializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	/**
-	 * eventhandler for button
+	 * Everytime the user selects a new creation, the Media player should preview the new selection
 	 */
 	@FXML
 	void handleSelectionChange() {
@@ -182,18 +191,18 @@ public class MainMenuController implements Initializable{
 
 
 	/**
-	 * changes scene to search
+	 * The scene changes to Creation scene
 	 */
 	@FXML
 	void handleCreate() {
-
-		player_.pause();
+		_playerBox.pause();
 		exit(SceneType.Search);
 	}
 
 	/**
-	 * universal delete button
-	 * @param event
+	 * universal delete button on press action.
+	 * Sends the delete message to the currently selected Video.
+	 * Message will later ask user for further confirmation
 	 */
 	@FXML
 	void handleDeleteVideo(ActionEvent event) {
@@ -203,6 +212,10 @@ public class MainMenuController implements Initializable{
 		}
 	}
 
+	/**
+	 * If the user has more than 3 creations in his library then they will be allow to access this scene.
+	 * Scene is changed to the matching quiz game scene
+	 */
 	@FXML
 	void handleQuiz(ActionEvent event) {
 		if(_creations.size()>2) {
@@ -215,7 +228,7 @@ public class MainMenuController implements Initializable{
 
 
 	/**
-	 * adds list view and media player to scene
+	 * This initializes the list view to show all the videos in library
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -225,59 +238,64 @@ public class MainMenuController implements Initializable{
 		 */
 		RunBash bash = new RunBash("List=`ls ./resources/VideoCreations` ; List=${List//.???/} ; printf \"${List// /.\\\\n}\\n\"");
 		_team.submit(bash);
+
 		bash.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+
 			@Override
 			public void handle(WorkerStateEvent event) {
 
 				try {
 					_creations = bash.get();
-
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 
+				//Message for user if there are no creations in library
 				if(_creations.get(0).isEmpty()) {
-
 					Text noCreations = new Text("No Current Creations");
-
 					_videoList.add(new HBox(noCreations));
 					videoListView.setItems(_videoList);
 
+				//Sets list view to contain all library video names
 				}else {
-
 					for(String video:_creations) {
 						new VideoBar(video,_videoList);
 					}
 					videoListView.setItems(_videoList);
 				}
-				//This adds the videoPlayer to the scene
-				player_ = new MediaBox();
 
-
-
-				_hbox.getChildren().add(player_);	
+				//This adds the videoPlayer to the anchor pane
+				_playerBox = new MediaBox();
+				_hbox.getChildren().add(_playerBox);	
 				if (videoListView.getSelectionModel().isEmpty()){
 					videoListView.getSelectionModel().clearAndSelect(0);
 					setNewMedia();
 				}
-
 			}
+
 		});
+
 	}
 
+	
+	/**
+	 * sets the video before the current selection into the Media Player
+	 */
 	public void playPrev() {
 		videoListView.getSelectionModel().selectPrevious();
 		setNewMedia();
 	}
+	
+	/**
+	 * sets the video after the current selection into the media Player
+	 */
 	public void playNext() {
-
 		videoListView.getSelectionModel().selectNext();
 		setNewMedia();
 	}
 
 	/**
-	 * helper method that creates a popup when an error occurs
-	 * @param msg
+	 * helper method that creates an error message popup that contains pararmeter input msg
 	 */
 	public void error(String msg) {
 		Alert alert = new Alert(AlertType.ERROR);
@@ -286,7 +304,10 @@ public class MainMenuController implements Initializable{
 		alert.setContentText(msg);
 		alert.showAndWait();
 	}
-	
+
+	/**
+	 * helper method that changes scenes when user input is detected
+	 */
 	private Object exit(SceneType location) {
 		return Main.changeScene(location, this);
 	}

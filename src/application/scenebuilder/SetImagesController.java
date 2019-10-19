@@ -43,13 +43,15 @@ public class SetImagesController implements Initializable{
 
 
 	/**
-	 * adds images to display
+	 * Initializes the grid pane and sets the nine images obtained from flickr
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		RunBash bash = new RunBash("ls ./resources/temp/images | cut -f1 -d'.'");
 		_team.submit(bash);
+		
 		bash.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+			
 			@Override
 			public void handle(WorkerStateEvent event) {
 
@@ -60,6 +62,7 @@ public class SetImagesController implements Initializable{
 				}
 
 
+				//gets the list of images obtained from flickr
 				_imageList = FXCollections.observableArrayList();
 				int i =0;
 				for(String image:_images) {
@@ -68,8 +71,6 @@ public class SetImagesController implements Initializable{
 					_mainPane.add(displayImage, i%3, i/3);
 					i++;	
 				}
-
-
 			}
 		});
 	}
