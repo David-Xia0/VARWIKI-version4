@@ -295,7 +295,7 @@ public class CreateMenuController implements Initializable{
 								@Override
 								public void handle(WorkerStateEvent event) {
 									//I used this to test the back gound music function
-									//(new BGM("CallingOnDolphins")).mergeBGM(__videoName,audioLength);
+									//(new BGM("victor_-_Calling_on_Dolphins")).mergeBGM(__videoName,audioLength);
 									_runningThread=false;
 									exit();
 								}

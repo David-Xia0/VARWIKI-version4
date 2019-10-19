@@ -138,13 +138,7 @@ public class QuizMenuController {
 						TemplateData template = (TemplateData) object.readObject();
 						_answerButtons.get(((int)position)%4).setText(template.getTerm());
 						position++;
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (ClassNotFoundException e) {
+					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}

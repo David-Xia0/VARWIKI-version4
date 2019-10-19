@@ -18,7 +18,8 @@ public class BGM {
 	 * 
 	 * ffmpeg -i input.mp3 -ss 00:02:54.583 -t 300 -acodec copy output.mp3 truncates audio file
 	 * ffmpeg  -i david1.mp4 -i victor*.mp3 -filter_complex "amix=inputs=2" -map 0:0 -c:a aac -strict -2 -c:v copy output.mp4 
-	 * @param file
+	 * @param file - takes in input of the video file name
+	 * @param length - takes in the length of the video
 	 */
 	public void mergeBGM(String file, double length) {
 		//truncates BGM to length of video file
@@ -31,8 +32,6 @@ public class BGM {
 		
 		_team.submit(truncateBGM);
 		_team.submit(concateBGM);
-
-		
 	}
 	
 	
