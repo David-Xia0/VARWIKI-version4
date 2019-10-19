@@ -24,7 +24,6 @@ import javafx.scene.control.TextField;
 public class SearchController {
 
 	private ExecutorService _team = Executors.newSingleThreadExecutor();
-	private boolean _runningThread;
 	
 	@FXML
 	private Button _searchButton,_backButton;
@@ -63,7 +62,6 @@ public class SearchController {
 		//wiki search bash command is used to obtain wikipedia information about the term
 		RunBash command = new RunBash("wikit "+ term);
 		_team.submit(command);
-		_runningThread = true;
 		
 		command.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 			

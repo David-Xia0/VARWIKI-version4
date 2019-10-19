@@ -15,7 +15,6 @@ import java.util.concurrent.Executors;
 
 import application.Main;
 import application.RunBash;
-import application.VideoBar;
 import application.Main.SceneType;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
@@ -23,12 +22,9 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 public class QuizMenuController {
 
@@ -83,6 +79,7 @@ public class QuizMenuController {
 					alert.setContentText("Sorry! correct Answer was: "+ template.getTerm());
 					alert.showAndWait();
 				}
+				object.close();
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -138,6 +135,7 @@ public class QuizMenuController {
 						TemplateData template = (TemplateData) object.readObject();
 						_answerButtons.get(((int)position)%4).setText(template.getTerm());
 						position++;
+						object.close();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
