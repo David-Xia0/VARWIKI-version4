@@ -23,9 +23,10 @@ public class BGM {
 	 */
 	public void mergeBGM(String file, double length) {
 		
-		if(_bgm.contentEquals("No music")) {
-			return;
-		}
+	
+			if(_bgm == null || _bgm.contentEquals("No music")) {
+				return;
+			}
 		
 		//truncates BGM to length of video file
 		RunBash truncateBGM = new RunBash("ffmpeg -i ./resources/"+_bgm+".mp3 -t "+length+" -acodec copy ./resources/temp/BGM.mp3");
