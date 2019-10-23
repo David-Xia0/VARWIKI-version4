@@ -19,6 +19,5 @@
       <Button fx:id="_guess2Button" layoutX="645.0" layoutY="237.0" mnemonicParsing="false" onAction="#handleCheckAnswer" prefHeight="80.0" prefWidth="80.0" style="-fx-background-color: lightgreen;" text="Button" />
       <Button fx:id="_guess3Button" layoutX="542.0" layoutY="338.0" mnemonicParsing="false" onAction="#handleCheckAnswer" prefHeight="80.0" prefWidth="80.0" style="-fx-background-color: lightgreen;" text="Button" />
       <Button fx:id="_guess4Button" layoutX="645.0" layoutY="338.0" mnemonicParsing="false" onAction="#handleCheckAnswer" prefHeight="80.0" prefWidth="80.0" style="-fx-background-color: lightgreen;" text="Button" />
-      <Text layoutX="562.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Guess What Topic It is" />
    </children>
 </AnchorPane>

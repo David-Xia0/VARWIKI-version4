@@ -39,22 +39,27 @@ public class VideoBar extends HBox{
 	}
 	
 	
-
+	/**
+	 * if the user decides to delete a video this method is called
+	 */
 	public void delete() {
 		if(!_deleteOption) {
 			_deleteOption=true;
 			Text confirm = new Text("Are you sure? ");
 
+			/*
+			 * the user is first prompted to a confirmation message within the video bar.
+			 */
 			Button yesButton = new Button("yes");
 			Button noButton = new Button("no");
 
 			yesButton.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent event) {
-					RunBash delete = new RunBash("rm -f ./resources/VideoCreations/"+_name.getText()+".mp4");
-					RunBash delete2 = new RunBash("rm -rf ./resources/templates/"+_name.getText());
-					_team.submit(delete);
-					_team.submit(delete2);
+					RunBash deleteVideo = new RunBash("rm -f ./resources/VideoCreations/"+_name.getText()+".mp4");
+					RunBash deleteTemplate = new RunBash("rm -rf ./resources/templates/"+_name.getText());
+					_team.submit(deleteVideo);
+					_team.submit(deleteTemplate);
 					_parent.remove(_bar);	
 
 					if(_parent.isEmpty()) {

@@ -1,9 +1,7 @@
-package application.functionality;
+package application;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import application.RunBash;
 
 public class BGM {
 
@@ -29,8 +27,8 @@ public class BGM {
 			}
 		
 		//truncates BGM to length of video file
-		RunBash truncateBGM = new RunBash("ffmpeg -i ./resources/"+_bgm+".mp3 -t "+length+" -acodec copy ./resources/temp/BGM.mp3");
-		
+		RunBash truncateBGM = new RunBash("ffmpeg -i ./resources/"+_bgm+" -t "+length+" -acodec copy ./resources/temp/BGM.mp3");
+		System.out.println(length+file);
 		//concates BGM to the video file. 
 		RunBash concateBGM = new RunBash("ffmpeg  -i ./resources/VideoCreations/"+file+".mp4 -i ./resources/temp/BGM.mp3 -filter_complex \"amix=inputs=2\" "
 				+ "-map 0:0 -c:a aac -strict -2 -c:v copy ./resources/VideoCreations/"+file+"-.mp4"

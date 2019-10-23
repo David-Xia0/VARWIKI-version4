@@ -18,10 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import application.functionality.*;
-import application.AudioBar;
 import application.Main.SceneType;
-import application.RunBash;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
@@ -188,6 +185,7 @@ public class CreateMenuController implements Initializable{
 		if(_audioList.isEmpty()){
 			boolean confirmed = noText();
 			if (!confirmed){
+				
 				return;
 			}
 			saveAllAudio();
