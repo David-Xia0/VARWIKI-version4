@@ -4,11 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is used to store Creation information. So this information can be accessed later for modification etc.
+ *
+ */
 public class TemplateData implements Serializable {
 		
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private final String text;
 	private final String name;
@@ -18,6 +20,10 @@ public class TemplateData implements Serializable {
 	private final List<String> _files;
 	private final List<String> _selectedImages;
 	
+	/**
+	 * all information about creation is obatined from the create menu controller scene
+	 * @param template
+	 */
 	public TemplateData(CreateMenuController template) {
 		text = template.getText();
 		name = template.getName();
@@ -31,6 +37,10 @@ public class TemplateData implements Serializable {
 			_selectedImages.add(image.substring(0, image.lastIndexOf(".")));
 		}
 	}
+	
+	/*
+	 * The following set of methods are all getters that return specific information
+	 */
 	
 	public String getText() {
 		return text;
@@ -58,6 +68,7 @@ public class TemplateData implements Serializable {
 	public String getTerm() {
 		return term;
 	}
+	
 	public boolean usingImages() {
 		return usingImages;
 	}

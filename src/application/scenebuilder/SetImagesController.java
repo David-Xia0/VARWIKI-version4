@@ -3,7 +3,6 @@ package application.scenebuilder;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,10 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 
 /**
@@ -43,13 +39,15 @@ public class SetImagesController implements Initializable{
 
 
 	/**
-	 * adds images to display
+	 * Initializes the grid pane and sets the nine images obtained from flickr
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		RunBash bash = new RunBash("ls ./resources/temp/images | cut -f1 -d'.'");
 		_team.submit(bash);
+		
 		bash.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+			
 			@Override
 			public void handle(WorkerStateEvent event) {
 
@@ -61,6 +59,7 @@ public class SetImagesController implements Initializable{
 				}
 
 
+				//gets the list of images obtained from flickr
 				_imageList = FXCollections.observableArrayList();
 				int i =0;
 				for(String image:_images) {
@@ -69,8 +68,6 @@ public class SetImagesController implements Initializable{
 					_mainPane.add(displayImage, i%3, i/3);
 					i++;	
 				}
-
-
 			}
 		});
 	}

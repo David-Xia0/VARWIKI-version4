@@ -72,6 +72,13 @@ public class CreateMenuController implements Initializable{
 	private String __videoName;
 	private boolean _cancel;
 	private RunBash _audioPlaying;
+	private String _term;
+	private Stage _stage;
+	private boolean _saving=false;
+	private boolean _defaultImages=true;
+	private int _i;
+	private TemplateData _template;
+
 
 	@FXML
 	private Button _playButton;
@@ -98,7 +105,8 @@ public class CreateMenuController implements Initializable{
 	@FXML
 	private Button _downButton;
 
-
+	@FXML
+	private ChoiceBox<String> _musicChoiceBox;
 
 	@FXML 
 	private CheckBox _imageSelection;
@@ -126,13 +134,7 @@ public class CreateMenuController implements Initializable{
 
 	@FXML
 	private TextField _videoName;
-
-	private String _term;
-	private Stage _stage;
-	private boolean _saving=false;
-	private boolean _defaultImages=true;
-	private int _i;
-	private TemplateData _template;
+	
 
 
 	/**
@@ -143,6 +145,10 @@ public class CreateMenuController implements Initializable{
 		ObservableList<String> voices = FXCollections.observableArrayList();
 		voices.addAll("Default","(voice_akl_nz_cw_cg_cg)","(voice_akl_nz_jdt_diphone)");
 		_festivalVoice.setItems(voices);
+		
+		ObservableList<String> music = FXCollections.observableArrayList();
+		music.addAll("No Music","victor_-_Calling_on_Dolphins.mp3");
+		_musicChoiceBox.setItems(music);	
 	}
 
 
@@ -152,7 +158,6 @@ public class CreateMenuController implements Initializable{
 	 */
 	@FXML
 	private void saveAllAudio(){
-
 		_displayTextArea.selectAll();
 		handleSaveAudio();
 		_displayTextArea.deselect();
@@ -212,9 +217,11 @@ public class CreateMenuController implements Initializable{
 				}
 			}
 
-			_loading.setVisible(true);
-			_createButton.setVisible(false);
-			__videoName = _videoName.getText();
+
+		_loading.setVisible(true);
+		_createButton.setVisible(false);
+
+		__videoName = _videoName.getText();
 
 			if((!__videoName.matches("[a-zA-Z0-9_-]*"))) {
 				error("name can only contain letter, numbers, _ and - ");
@@ -307,8 +314,8 @@ public class CreateMenuController implements Initializable{
 							createVideo2.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 								@Override
 								public void handle(WorkerStateEvent event) {
-									//I used this to test the back gound music function
-									//(new BGM("victor_-_Calling_on_Dolphins")).mergeBGM(__videoName,audioLength);
+									
+									(new BGM(_musicChoiceBox.getSelectionModel().getSelectedItem())).mergeBGM(__videoName,audioLength);
 									_runningThread=false;
 									exit();
 								}

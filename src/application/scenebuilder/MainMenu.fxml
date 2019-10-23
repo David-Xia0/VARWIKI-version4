@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
@@ -13,13 +14,13 @@
    <children>
       <AnchorPane prefHeight="600.0" prefWidth="800.0">
          <children>
-            <Button fx:id="deleteButton" layoutX="306.0" layoutY="493.0" mnemonicParsing="false" onAction="#handleDeleteVideo" style="-fx-background-color: f10101;" text="Delete" />
+            <Button fx:id="_deleteButton" layoutX="306.0" layoutY="493.0" mnemonicParsing="false" onAction="#handleDeleteVideo" style="-fx-background-color: f10101;" text="Delete" />
             <Text layoutX="66.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome To VARWIKI">
                <font>
                   <Font size="62.0" />
                </font>
             </Text>
-            <Button fx:id="createButton" layoutX="31.0" layoutY="493.0" mnemonicParsing="false" onAction="#handleCreate" style="-fx-background-color: lightblue;" text="Create New Creation" />
+            <Button fx:id="_createButton" layoutX="31.0" layoutY="493.0" mnemonicParsing="false" onAction="#handleCreate" style="-fx-background-color: lightblue;" text="Create New Creation" />
             <HBox fx:id="_hbox" layoutX="31.0" layoutY="108.0" spacing="30.0">
                <children>
                   <ScrollPane prefHeight="385.0" prefWidth="334.0">
@@ -35,7 +36,11 @@
                <font>
                   <Font size="35.0" />
                </font></Button>
-            <Button layoutX="185.0" layoutY="493.0" mnemonicParsing="false" onAction="#testSerial" text="Modify Creation" />
+            <Button fx:id="_modifyButton" layoutX="185.0" layoutY="493.0" mnemonicParsing="false" onAction="#testSerial" text="Modify Creation" />
+            <ToggleButton fx:id="_lockButton" layoutX="14.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleLockScreen" style="-fx-background-color: yellow;" text="Lock">
+               <font>
+                  <Font size="7.0" />
+               </font></ToggleButton>
          </children>
       </AnchorPane>
    </children>
