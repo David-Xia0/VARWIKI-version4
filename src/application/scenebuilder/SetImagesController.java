@@ -54,7 +54,8 @@ public class SetImagesController implements Initializable{
 			public void handle(WorkerStateEvent event) {
 
 				try {
-					_images = bash.get();		
+					_images = bash.get();
+					System.out.println(_images);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -121,8 +122,8 @@ public class SetImagesController implements Initializable{
 	public void setSelectedImages(List<String> SelectedImages) {
 		selectNone();
 		for(String i : SelectedImages) {
-			_imageList.get(Integer.parseInt(i)).setSelected(true);
-
+			_imageList.get(Integer.parseInt(i)-1).setSelected(true);
+			System.out.println(i);
 		}
 	}
 

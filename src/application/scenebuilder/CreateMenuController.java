@@ -188,59 +188,71 @@ public class CreateMenuController implements Initializable{
 			saveAllAudio();
 		}
 
+		if (_template != null) {
 
-		if(_template != null && _template.getName()!=_videoName.getText()) {
-			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.setTitle("Are you sure?");
-			alert.setHeaderText("Name change detected");
-			alert.setContentText("Do you want to create a new creation?");
-			Optional<ButtonType> result = alert.showAndWait();
-			if(result.get() != ButtonType.OK) {
-				return;
-			}
-		}
+			if (!_template.getName().contentEquals(_videoName.getText())) {
 
-		_loading.setVisible(true);
-		_createButton.setVisible(false);
-		while(_saving) {
-			int a =0;
-		}
-		__videoName = _videoName.getText();
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("Are you sure?");
+				alert.setHeaderText("Name change detected");
+				alert.setContentText("Do you want to create a new creation?");
+				Optional<ButtonType> result = alert.showAndWait();
+				if(result.get() != ButtonType.OK) {
+					return;
+				} else {
 
-		if((!__videoName.matches("[a-zA-Z0-9_-]*"))) {
-			error("name can only contain letter, numbers, _ and - ");
-			return;
-		}else{
-			//checks if file already exists
-			RunBash f = new RunBash("[ -e ./resources/VideoCreations/"+__videoName+".mp4 ]");
-			_team.submit(f);
-			f.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-
-				@Override
-				public void handle(WorkerStateEvent arg0) {
-					if(f.getExitStatus()== 0) {
-						Alert alert = new Alert(AlertType.CONFIRMATION);
-						alert.setTitle("ERROR ");
-						alert.setHeaderText("File already exists");
-						alert.setContentText("would you like to overwrite?");
-						Optional<ButtonType> result = alert.showAndWait();
-
-						if(result.get() != ButtonType.OK) {
-							_loading.setVisible(false);
-							_createButton.setVisible(true);
-							return;
-						}else {
-							RunBash remove = new RunBash("rm ./resources/VideoCreations/"+__videoName+".mp4");
-							_team.submit(remove);
-							createVideo();
-						}
-					}else {
-						createVideo();
+					Alert alert2 = new Alert(AlertType.CONFIRMATION);
+					alert.setTitle("Save changes?");
+					alert.setHeaderText("This will overwrite your current Creation");
+					alert.setContentText("Do you want to save your changes?");
+					Optional<ButtonType> result2 = alert2.showAndWait();
+					if(result2.get() != ButtonType.OK) {
+						return;
 					}
 				}
+			}
 
-			});
-			return;
+			_loading.setVisible(true);
+			_createButton.setVisible(false);
+			__videoName = _videoName.getText();
+
+			if((!__videoName.matches("[a-zA-Z0-9_-]*"))) {
+				error("name can only contain letter, numbers, _ and - ");
+				return;
+			}else{
+				//checks if file already exists
+				RunBash f = new RunBash("[ -e ./resources/VideoCreations/"+__videoName+".mp4 ]");
+				_team.submit(f);
+				f.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+
+					@Override
+					public void handle(WorkerStateEvent arg0) {
+						if(f.getExitStatus()== 0 ) {
+							Alert alert = new Alert(AlertType.CONFIRMATION);
+							alert.setTitle("Save changes?");
+							alert.setHeaderText("This will overwrite your current Creation");
+							alert.setContentText("Do you want to save your changes?");
+							Optional<ButtonType> result = alert.showAndWait();
+							if(result.get() != ButtonType.OK) {
+								_loading.setVisible(false);
+								_createButton.setVisible(true);
+								return;
+							}else {
+								RunBash remove = new RunBash("rm ./resources/VideoCreations/"+__videoName+".mp4");
+								_team.submit(remove);
+								handleSaveTemplate();
+								createVideo();
+							}
+						}else {
+							handleSaveTemplate();
+							createVideo();
+						}
+					}
+
+
+				});
+				return;
+			}
 		}
 	}
 
@@ -255,6 +267,7 @@ public class CreateMenuController implements Initializable{
 		for(Node audio:_audioList) {
 			audioFileNames = audioFileNames+audio.toString()+".wav ";
 		}		
+		System.out.println(name + " " + audioFileNames + " " + images.size());
 		RunBash mergeAudio = new RunBash("sox "+ audioFileNames +" ./resources/temp/output.wav");
 		_team.submit(mergeAudio);	
 		mergeAudio.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
@@ -396,10 +409,13 @@ public class CreateMenuController implements Initializable{
 
 	}
 
+
+	//private void initializeSetImages(TemplateData data) {
+
 	/**
 	 * creates the popup that is used to select images
 	 */
-	private void initializeSetImages() {
+	private void initializeSetImages(TemplateData data) {
 		FXMLLoader loader = new FXMLLoader();
 
 		loader.setLocation(getClass().getResource("SetImages.fxml"));
@@ -415,6 +431,7 @@ public class CreateMenuController implements Initializable{
 			_stage.setScene(scene);
 			_stage.initModality(Modality.APPLICATION_MODAL);
 			_stage.initStyle(StageStyle.UNDECORATED);
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -442,6 +459,7 @@ public class CreateMenuController implements Initializable{
 
 	private void popupSetImages() {
 		_stage.show();
+		_controller.setSelectedImages(_template.getSelectedImages());
 	}
 
 	/**
@@ -453,6 +471,9 @@ public class CreateMenuController implements Initializable{
 		handleSaveAudio(20);
 	}
 	void handleSaveAudio(int length) {
+		if(_runningThread ==true) {
+			return;
+		}else{_runningThread = true;}
 		_team.submit(new RunBash("mkdir ./resources/temp/tmpaudio"));
 		_cancel = false;
 		int maxLength = length;
@@ -513,6 +534,7 @@ public class CreateMenuController implements Initializable{
 						new AudioBar(selectedText,audioCount+"",_audioList);
 						_audioBox.setItems(_audioList);
 						audioCount++;
+						_runningThread = false;
 					}
 				});
 			}
@@ -616,14 +638,14 @@ public class CreateMenuController implements Initializable{
 				});
 				_team.submit(mergeAudio);	
 				_team.submit(new RunBash("rm -rf ./resources/temp/tmpaudio"));
-				
+
 			}
 		});
 		for(int i =0; i<commandList.size(); i++) {
 			_team.submit(commandList.get(i));
 		}
-		
-		
+
+
 
 	}
 
@@ -759,9 +781,9 @@ public class CreateMenuController implements Initializable{
 		_displayTextArea.setText(text);
 		_term = term;
 		_festivalVoice.getSelectionModel().clearAndSelect(0);
-		
+
 		_runningThread = false;
-		initializeSetImages();
+		initializeSetImages(template);
 		_template=template;
 	}
 
@@ -782,9 +804,9 @@ public class CreateMenuController implements Initializable{
 	public void setup(TemplateData data) {
 		String term = data.getTerm();
 		String text = data.getText();
-			setup(text,term,data);
-			//this is currently kinda glitchy (ie it doesnt work)
-		//_controller.setSelectedImages(data.getSelectedImages());
+
+		//this is currently kinda glitchy (ie it doesnt work)
+
 		String path = "./resources/templates/" + data.getName();
 		_videoName.setText(data.getName());
 		_team.submit(new RunBash("cp -rf " + path +"/images ./resources/temp"));
@@ -809,8 +831,9 @@ public class CreateMenuController implements Initializable{
 			_audioBox.setItems(_audioList);
 			audioCount++;
 		}
-		*/
+		 */
 		_imageSelection.setSelected(data.usingImages());
+		setup(text,term,data);
 
 	}
 
@@ -834,7 +857,7 @@ public class CreateMenuController implements Initializable{
 		template.mkdir();
 		_team.submit(new RunBash("cp -rf ./resources/temp/images "+ path));
 		_team.submit(new RunBash("cp -rf ./resources/temp/audio "+ path));
-		
+
 		FileOutputStream fos;
 		try {
 			File file = new File(Main.getPathToResources() + "/templates/"+_videoName.getText() + "/info.class");
@@ -856,7 +879,7 @@ public class CreateMenuController implements Initializable{
 	}
 
 	private void exit(SceneType location) {
-		handleSaveTemplate();
+		//handleSaveTemplate();
 		Main.changeScene(location, this);
 	}
 
@@ -882,23 +905,23 @@ public class CreateMenuController implements Initializable{
 	public List<String> getAudioText() {
 		List<String> audioText = new ArrayList<String>();
 		for(Node node : _audioList) {
-		
+
 			//if(node.getClass().getName() == "application.scenebuilder.AudioBar") {
-				audioText.add(((AudioBar) node).getText());
+			audioText.add(((AudioBar) node).getText());
 			//}
-	
+
 		}
-		
+
 		return audioText;
 	}
-	
+
 	public List<String> fileOrder() {
 		List<String> files = new ArrayList<String>();
 		for(Node node : _audioList) {
 			//if(node.getClass().getName() == "application.scenebuilder.AudioBar") {
-				files.add(((AudioBar) node).getName());
+			files.add(((AudioBar) node).getName());
 			//}
-	
+
 		}
 		return files;
 	}

@@ -69,7 +69,7 @@ public class GetFlickr extends Task<Void>{
 	        	i++;
 	        	try {
 	        		BufferedImage image = photos.getImage(photo,Size.LARGE);
-		        	String filename = _searchTerm.trim().replace(' ', '-') + "-" + i + ".jpg";
+		        	String filename = i + ".jpg";
 		        
 		        	File outputfile = new File(Main.getPathToResources() + "/temp/images",filename);
 		        	ImageIO.write(image, "jpg", outputfile);

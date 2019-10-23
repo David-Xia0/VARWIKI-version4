@@ -25,7 +25,11 @@ public class TemplateData implements Serializable {
 		usingImages = template.usingImages();
 		audioText = template.getAudioText();
 		_files = template.fileOrder();
-		_selectedImages = template.getSelectedImages();
+		_selectedImages = new ArrayList<String>();
+		List<String> selectedImages = template.getSelectedImages();
+		for(String image: selectedImages) {
+			_selectedImages.add(image.substring(0, image.lastIndexOf(".")));
+		}
 	}
 	
 	public String getText() {
