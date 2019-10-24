@@ -45,9 +45,9 @@ public class SetImagesController implements Initializable{
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		RunBash bash = new RunBash("ls ./resources/temp/images | cut -f1 -d'.'");
 		_team.submit(bash);
-		
+
 		bash.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-			
+
 			@Override
 			public void handle(WorkerStateEvent event) {
 
@@ -78,7 +78,7 @@ public class SetImagesController implements Initializable{
 	}
 
 	@FXML
-	void selectAll(ActionEvent event) {
+	void selectAll() {
 		selectAllNone(true);
 	}
 
@@ -88,7 +88,7 @@ public class SetImagesController implements Initializable{
 	}
 
 	/**
-	 * helper for selection buttons
+	 * Helper for selection buttons, checks if a image is selected or note and reverses the selection
 	 * @param all
 	 */
 	public void selectAllNone(boolean all) {
@@ -108,7 +108,7 @@ public class SetImagesController implements Initializable{
 	}
 
 	/**
-	 * hides window
+	 * Hides the window
 	 * @param event
 	 */
 	@FXML
@@ -117,27 +117,32 @@ public class SetImagesController implements Initializable{
 	}
 
 	public void setSelectedImages(List<String> SelectedImages) {
+		if (SelectedImages==null || SelectedImages.isEmpty()) {
+			selectAll();
+			return;
+		}
+
 		selectNone();
 		for(String i : SelectedImages) {
 			_imageList.get(Integer.parseInt(i)-1).setSelected(true);
-			System.out.println(i);
 		}
+		
 	}
 
-/**
- * returns list of selected images
- * @return
- */
-public List<ImageElement> getSelectedImages(){
-	List<ImageElement> selected = new ArrayList<ImageElement>();
+	/**
+	 * returns list of selected images
+	 * @return
+	 */
+	public List<ImageElement> getSelectedImages(){
+		List<ImageElement> selected = new ArrayList<ImageElement>();
 
-	for(ImageElement i:_imageList) {
-		if(i.isSelected()) {
-			selected.add(i);
+		for(ImageElement i:_imageList) {
+			if(i.isSelected()) {
+				selected.add(i);
+			}
 		}
+		return selected;
 	}
-	return selected;
-}
 
 
 

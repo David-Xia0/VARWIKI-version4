@@ -23,6 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
@@ -42,6 +43,7 @@ import application.Main.SceneType;
 public class MainMenuController implements Initializable{
 
 
+	private static boolean _firstLoad=true;
 	private static boolean _lockStatus;
 	private ExecutorService _team = Executors.newSingleThreadExecutor(); 
 	private List<String> _creations = new ArrayList<String>();
@@ -50,25 +52,28 @@ public class MainMenuController implements Initializable{
 	private ObservableList<HBox> _videoList = FXCollections.observableArrayList();
 
 	@FXML
-    private Button _deleteButton;
+	private Button _deleteButton;
 
-    @FXML
-    private Button _createButton;
+	@FXML
+	private Button _createButton;
 
-    @FXML
-    private HBox _hbox;
+	@FXML
+	private HBox _hbox;
 
-    @FXML
-    private ListView<HBox> videoListView;
+	@FXML 
+	private ProgressIndicator _loading;
 
-    @FXML
-    private Button _quizButton;
+	@FXML
+	private ListView<HBox> videoListView;
 
-    @FXML
-    private Button _modifyButton;
+	@FXML
+	private Button _quizButton;
 
-    @FXML
-    private ToggleButton _lockButton;
+	@FXML
+	private Button _modifyButton;
+
+	@FXML
+	private ToggleButton _lockButton;
 
 
 
@@ -115,7 +120,7 @@ public class MainMenuController implements Initializable{
 		}
 	}
 
-	
+
 	/**
 	 * Modify Existing Video Creation
 	 * Goes to create Menu and loads existing template from video
@@ -189,7 +194,7 @@ public class MainMenuController implements Initializable{
 			error("PLease at least have 3 creations");
 		}
 	}
-	
+
 	/**
 	 * this toggle button action switches between child mode and adult mode
 	 * in child mode, Video delete,create and modify functionality is disabled
@@ -200,7 +205,7 @@ public class MainMenuController implements Initializable{
 		_lockStatus=!_lockStatus;
 		setLockButtons();
 	}
-	
+
 	/**
 	 * Sets the status of The buttons depending on the current lock status
 	 * If lock is inplace, create delete modify buttons are greyed out
@@ -229,7 +234,10 @@ public class MainMenuController implements Initializable{
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-
+		if(_firstLoad) {
+			_lockStatus = true;
+			_firstLoad = false;
+		}
 		/*
 		 * this loads the current stored videos and loads the video player with the first stored video.
 		 */
@@ -253,7 +261,7 @@ public class MainMenuController implements Initializable{
 					_videoList.add(new HBox(noCreations));
 					videoListView.setItems(_videoList);
 
-				//Sets list view to contain all library video names
+					//Sets list view to contain all library video names
 				}else {
 					for(String video:_creations) {
 						new VideoBar(video,_videoList);
@@ -271,12 +279,12 @@ public class MainMenuController implements Initializable{
 			}
 
 		});
-		
+
 		// checks if child lock is on and then disables create and modify buttons
 		setLockButtons();
 	}
 
-	
+
 	/**
 	 * sets the video before the current selection into the Media Player
 	 */
@@ -284,7 +292,7 @@ public class MainMenuController implements Initializable{
 		videoListView.getSelectionModel().selectPrevious();
 		setNewMedia();
 	}
-	
+
 	/**
 	 * sets the video after the current selection into the media Player
 	 */

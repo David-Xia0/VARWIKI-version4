@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 
 import application.Main;
 import application.RunBash;
+import application.VideoCreator;
 import application.Main.SceneType;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
@@ -30,7 +31,7 @@ public class QuizMenuController {
 
 	private ExecutorService _team = Executors.newSingleThreadExecutor(); 
 	private List<String> _creations = new ArrayList<String>();
-	private MediaBox player_;
+	private MediaBox _player;
 	private double randomCreation;
 	private List<Double> _answerOptions = new ArrayList<Double>();
 	private List<Button> _answerButtons;
@@ -57,41 +58,51 @@ public class QuizMenuController {
 	private Button _guess4Button;
 
 	@FXML
+	private Button _nextQuestionButton;
+
+	@FXML
 	private HBox _hbox;
+
+
+
+	@FXML
+	void handleNextQuestion(ActionEvent event) {
+
+	}
 
 	@FXML
 	void handleCheckAnswer(ActionEvent event) {
-		 String answer = ((Button)event.getSource()).getText();
-		 
-		 String data = Main.getPathToResources() + "/templates/" +  _creations.get((int)randomCreation) + "/info.class";
-			try {
-				FileInputStream fileIn = new FileInputStream(data);
-				ObjectInputStream object = new ObjectInputStream(fileIn);
-				TemplateData template = (TemplateData) object.readObject();
-				if(template.getTerm().contentEquals(answer)) {
-					Alert alert = new Alert(AlertType.INFORMATION);
-					alert.setTitle("Correct");
-					alert.setContentText("Nice! you got the answer correct");
-					alert.showAndWait();
-				}else {
-					Alert alert = new Alert(AlertType.INFORMATION);
-					alert.setTitle("Incorrect");
-					alert.setContentText("Sorry! correct Answer was: "+ template.getTerm());
-					alert.showAndWait();
-				}
-				object.close();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		String answer = ((Button)event.getSource()).getText();
+
+		String data = Main.getPathToResources() + "/templates/" +  _creations.get((int)randomCreation) + "/info.class";
+		try {
+			FileInputStream fileIn = new FileInputStream(data);
+			ObjectInputStream object = new ObjectInputStream(fileIn);
+			TemplateData template = (TemplateData) object.readObject();
+			if(template.getTerm().contentEquals(answer)) {
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Correct");
+				alert.setContentText("Nice! you got the answer correct");
+				alert.showAndWait();
+			}else {
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Incorrect");
+				alert.setContentText("Sorry! correct Answer was: "+ template.getTerm());
+				alert.showAndWait();
 			}
-		
-		Main.changeScene(SceneType.QuizMenu, this);
+			object.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		exit(SceneType.QuizMenu);
 	}
 
 
@@ -102,8 +113,12 @@ public class QuizMenuController {
 
 	@FXML
 	void initialize() {
-		
+
 		_answerButtons =  new ArrayList<>(Arrays.asList(_guess1Button, _guess2Button, _guess3Button, _guess4Button));
+		
+		
+		
+		
 		RunBash bash = new RunBash("List=`ls ./resources/VideoCreations` ; List=${List//.???/} ; printf \"${List// /.\\\\n}\\n\"");
 		_team.submit(bash);
 		bash.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
@@ -121,12 +136,12 @@ public class QuizMenuController {
 					_answerOptions.add(Math.random()*_creations.size());
 				}
 				_answerOptions.add(randomCreation);
-				
+
 
 				System.out.println(_answerOptions);
 				double position = Math.random()*(4);
 				System.out.println(position);
-				
+
 				for(int i=0;i<4;i++) {
 					String data = Main.getPathToResources() + "/templates/" +  _creations.get(_answerOptions.get(i).intValue()) + "/info.class";
 					try {
@@ -141,12 +156,15 @@ public class QuizMenuController {
 						e.printStackTrace();
 					}
 				}
-				
+
+
+
+
 
 				//This adds the videoPlayer to the scene
-				player_ = new MediaBox();
+				_player = new MediaBox();
 
-				_hbox.getChildren().add(player_);	
+				_hbox.getChildren().add(_player);	
 				setNewMedia();
 			}
 		});
@@ -154,22 +172,50 @@ public class QuizMenuController {
 
 	private void setNewMedia() {
 		//setup(currentSelection);	
-		String creation = _creations.get((int) randomCreation);
-		
+
+
+		String data = Main.getPathToResources() + "/templates/" +  _creations.get((int)randomCreation) + "/info.class";
+		try {
+			FileInputStream fileIn = new FileInputStream(data);
+			ObjectInputStream object = new ObjectInputStream(fileIn);
+			TemplateData template = (TemplateData) object.readObject();
+			object.close();
+
+			VideoCreator video = new VideoCreator(template);
+			_team.submit(video);
+			video.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+
+				@Override
+				public void handle(WorkerStateEvent event) {
+					
+					loadVideo();
+				}
+			});
+
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+	}
+
+	private void loadVideo() {
+
 		URL mediaUrl;
 		try {
-			mediaUrl = new File(Main.getPathToResources() + "/VideoCreations/"+creation+".mp4").toURI().toURL();
+			mediaUrl = new File(Main.getPathToResources() + "/temp/matchingVideo.mp4").toURI().toURL();
+			System.out.println(Main.getPathToResources());
 			Media newMedia = new Media(mediaUrl.toExternalForm());
-			player_.setMedia(newMedia);
+			_player.setMedia(newMedia);
 		} catch (Exception e) {
-			//e.printStackTrace();
-			
+			e.printStackTrace();
 		}
 	}
-	
+
 	private Object exit(SceneType location) {
 		return Main.changeScene(location, this);
 	}
-
 }
 

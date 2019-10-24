@@ -15,6 +15,7 @@ public class TemplateData implements Serializable {
 	private final String text;
 	private final String name;
 	private final String term;
+	private final String BGM;
 	private boolean usingImages;
 	private final List<String> audioText;
 	private final List<String> _files;
@@ -28,6 +29,7 @@ public class TemplateData implements Serializable {
 		text = template.getText();
 		name = template.getName();
 		term = template.getTerm();
+		BGM = template.getBGM();
 		usingImages = template.usingImages();
 		audioText = template.getAudioText();
 		_files = template.fileOrder();
@@ -53,6 +55,10 @@ public class TemplateData implements Serializable {
 		return audioText.get(audioNumber);
 	}
 	
+	public List<String> getAudioText(){
+		return audioText;
+	}
+	
 	public List<String> getSelectedImages(){
 		return _selectedImages;
 	}
@@ -67,6 +73,10 @@ public class TemplateData implements Serializable {
 	
 	public String getTerm() {
 		return term;
+	}
+	
+	public String getBGM() {
+		return BGM;
 	}
 	
 	public boolean usingImages() {

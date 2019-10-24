@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.ToggleButton?>
@@ -15,9 +14,9 @@
       <AnchorPane prefHeight="600.0" prefWidth="800.0">
          <children>
             <Button fx:id="_deleteButton" layoutX="306.0" layoutY="493.0" mnemonicParsing="false" onAction="#handleDeleteVideo" style="-fx-background-color: f10101;" text="Delete" />
-            <Text layoutX="66.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome To VARWIKI">
+            <Text layoutX="33.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome To VARWIKI">
                <font>
-                  <Font size="62.0" />
+                  <Font name="System Bold" size="62.0" />
                </font>
             </Text>
             <Button fx:id="_createButton" layoutX="31.0" layoutY="493.0" mnemonicParsing="false" onAction="#handleCreate" style="-fx-background-color: lightblue;" text="Create New Creation" />
@@ -30,10 +29,9 @@
                   </ScrollPane>
                </children>
             </HBox>
-            <Label layoutX="31.0" layoutY="87.0" prefHeight="16.0" prefWidth="173.0" text="Current Creations:" />
             <Button fx:id="_quizButton" layoutX="469.0" layoutY="482.0" mnemonicParsing="false" onAction="#handleQuiz" prefHeight="97.0" prefWidth="198.0" style="-fx-background-color: lightgreen;" text="LEARN">
                <font>
-                  <Font size="35.0" />
+                  <Font name="System Bold Italic" size="35.0" />
                </font></Button>
             <Button fx:id="_modifyButton" layoutX="185.0" layoutY="493.0" mnemonicParsing="false" onAction="#testSerial" text="Modify Creation" />
             <ToggleButton fx:id="_lockButton" layoutX="14.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleLockScreen" style="-fx-background-color: yellow;" text="Lock">

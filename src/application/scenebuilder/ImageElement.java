@@ -48,6 +48,10 @@ public class ImageElement extends AnchorPane{
 			}
     }
     
+    /**
+     * loads previous selection onto the grid pane
+     * @param selected
+     */
     public void setSelected(boolean selected) {
     	if(_isSelected!=selected) {
     		handleImageClicked();
@@ -71,7 +75,7 @@ public class ImageElement extends AnchorPane{
 	}
     
 	/**
-	 * if the image is clicked, it is either elected or unselected
+	 * if the image is clicked, it is either selected or unselected
 	 */
     @FXML
     public void handleImageClicked() {

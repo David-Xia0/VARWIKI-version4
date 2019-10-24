@@ -21,9 +21,10 @@ import com.flickr4java.flickr.photos.Size;
 import javafx.concurrent.Task;
 
 /**
- * task which saves x images related to a term to /resources/temp/images
+ * Task which saves x images related to a term to /resources/temp/images
+ * 
  * @author student
- *
+ *	Reference: 206_FlickrExample obtained from ACP
  */
 public class GetFlickr extends Task<Void>{
 
@@ -31,9 +32,9 @@ public class GetFlickr extends Task<Void>{
 		private int _num;
 
 		/**
-		 * constructor
-		 * @param searchTerm
-		 * @param num
+		 * 
+		 * @param searchTerm, term that is searched on flickr api
+		 * @param num, number of images we save off the flickr api
 		 */
 		public GetFlickr(String searchTerm, int num){
 			_searchTerm = searchTerm;
@@ -42,7 +43,7 @@ public class GetFlickr extends Task<Void>{
 	
 		
 		/**
-		 * see class description
+		 * Call method implemented to contain all time consuming search functionality
 		 */
 		@Override
 		protected Void call() throws Exception {
@@ -86,7 +87,7 @@ public class GetFlickr extends Task<Void>{
 	}
 	
 	/**
-	 * returns keys from config file
+	 * API keys are stored in ./resources/flickr-api-keys.txt. This function retrieves those keys. 
 	 * @param key
 	 * @return
 	 * @throws Exception

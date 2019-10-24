@@ -131,7 +131,7 @@ public class CreateMenuController implements Initializable{
 
 	@FXML
 	private TextField _videoName;
-	
+
 
 
 	/**
@@ -142,7 +142,7 @@ public class CreateMenuController implements Initializable{
 		ObservableList<String> voices = FXCollections.observableArrayList();
 		voices.addAll("Default","(voice_akl_nz_cw_cg_cg)","(voice_akl_nz_jdt_diphone)");
 		_festivalVoice.setItems(voices);
-		
+
 		ObservableList<String> music = FXCollections.observableArrayList();
 		music.addAll("No Music","victor_-_Calling_on_Dolphins.mp3");
 		_musicChoiceBox.setItems(music);	
@@ -182,10 +182,10 @@ public class CreateMenuController implements Initializable{
 			error("No Name set");
 			return;
 		}
+
 		if(_audioList.isEmpty()){
 			boolean confirmed = noText();
 			if (!confirmed){
-				
 				return;
 			}
 			saveAllAudio();
@@ -214,6 +214,7 @@ public class CreateMenuController implements Initializable{
 					}
 				}
 			}
+		}
 
 
 		_loading.setVisible(true);
@@ -221,45 +222,45 @@ public class CreateMenuController implements Initializable{
 
 		__videoName = _videoName.getText();
 
-			if((!__videoName.matches("[a-zA-Z0-9_-]*"))) {
-				error("name can only contain letter, numbers, _ and - ");
-				return;
-			}else{
-				//checks if file already exists
-				RunBash f = new RunBash("[ -e ./resources/VideoCreations/"+__videoName+".mp4 ]");
-				_team.submit(f);
-				f.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+		if((!__videoName.matches("[a-zA-Z0-9_-]*"))) {
+			error("name can only contain letter, numbers, _ and - ");
+			return;
+		}else{
+			//checks if file already exists
+			RunBash f = new RunBash("[ -e ./resources/VideoCreations/"+__videoName+".mp4 ]");
+			_team.submit(f);
+			f.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
-					@Override
-					public void handle(WorkerStateEvent arg0) {
-						if(f.getExitStatus()== 0 ) {
-							Alert alert = new Alert(AlertType.CONFIRMATION);
-							alert.setTitle("Save changes?");
-							alert.setHeaderText("This will overwrite your current Creation");
-							alert.setContentText("Do you want to save your changes?");
-							Optional<ButtonType> result = alert.showAndWait();
-							if(result.get() != ButtonType.OK) {
-								_loading.setVisible(false);
-								_createButton.setVisible(true);
-								return;
-							}else {
-								RunBash remove = new RunBash("rm ./resources/VideoCreations/"+__videoName+".mp4");
-								_team.submit(remove);
-								handleSaveTemplate();
-								createVideo();
-							}
+				@Override
+				public void handle(WorkerStateEvent arg0) {
+					if(f.getExitStatus()== 0 ) {
+						Alert alert = new Alert(AlertType.CONFIRMATION);
+						alert.setTitle("Save changes?");
+						alert.setHeaderText("This will overwrite your current Creation");
+						alert.setContentText("Do you want to save your changes?");
+						Optional<ButtonType> result = alert.showAndWait();
+						if(result.get() != ButtonType.OK) {
+							_loading.setVisible(false);
+							_createButton.setVisible(true);
+							return;
 						}else {
+							RunBash remove = new RunBash("rm ./resources/VideoCreations/"+__videoName+".mp4");
+							_team.submit(remove);
 							handleSaveTemplate();
 							createVideo();
 						}
+					}else {
+						handleSaveTemplate();
+						createVideo();
 					}
+				}
 
 
-				});
-				return;
-			}
+			});
+			return;
 		}
 	}
+
 
 	/**
 	 * THis method contains most/all of the bash and ffmpeg commands used in video creation
@@ -289,15 +290,14 @@ public class CreateMenuController implements Initializable{
 
 						try {
 							audioLength = Double.parseDouble(audioLengthSoxi.get().get(0));
-							RunBash createVideoAudio = new RunBash("ffmpeg -i ./resources/temp/output.wav -vn -ar 44100 -ac 2 -b:a 192k ./resources/temp/output.mp3 &> /dev/null "
-									+ "; ffmpeg -f lavfi -i color=c=blue:s=320x240:d="+audioLength 
-									+ " -vf \"drawtext=fontfile=/path/to/font.ttf:fontsize=30: "
-									+ "fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:text="+_term+"\" ./resources/temp/"+name+"noImage.mp4 &> /dev/null ;");
-
+							RunBash createVideoAudio = new RunBash("ffmpeg -i ./resources/temp/output.wav -vn -ar 44100 -ac 2 -b:a 192k ./resources/temp/output.mp3 &> /dev/null ");
 							_team.submit(createVideoAudio);
 							RunBash createVideo2;
 							if(!_imageSelection.isSelected()) {
-								createVideo2 = new RunBash("ffmpeg -i ./resources/temp/"+name +"noImage.mp4 -i ./resources/temp/output.mp3 -c:v copy -c:a aac -strict experimental "
+								createVideo2 = new RunBash( "ffmpeg -f lavfi -i color=c=blue:s=320x240:d="+audioLength 
+										+ " -vf \"drawtext=fontfile=/path/to/font.ttf:fontsize=30: "
+										+ "fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:text="+_term+"\" ./resources/temp/"+name+"NoImage.mp4 &> /dev/null ;"
+										+ "ffmpeg -i ./resources/temp/"+name +"NoImage.mp4 -i ./resources/temp/output.mp3 -c:v copy -c:a aac -strict experimental "
 										+ "./resources/VideoCreations/"+name+".mp4  &> /dev/null");
 							} else {
 								markImages(images);
@@ -312,7 +312,7 @@ public class CreateMenuController implements Initializable{
 							createVideo2.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 								@Override
 								public void handle(WorkerStateEvent event) {
-									
+
 									(new BGM(_musicChoiceBox.getSelectionModel().getSelectedItem())).mergeBGM(__videoName,audioLength);
 									_runningThread=false;
 									exit();
@@ -415,8 +415,6 @@ public class CreateMenuController implements Initializable{
 	}
 
 
-	//private void initializeSetImages(TemplateData data) {
-
 	/**
 	 * creates the popup that is used to select images
 	 */
@@ -464,7 +462,10 @@ public class CreateMenuController implements Initializable{
 
 	private void popupSetImages() {
 		_stage.show();
-		_controller.setSelectedImages(_template.getSelectedImages());
+		if(_template!=null) {
+			_controller.setSelectedImages(_template.getSelectedImages());
+		}
+
 	}
 
 	/**
@@ -735,9 +736,6 @@ public class CreateMenuController implements Initializable{
 
 		RunBash createFile = new RunBash("touch ./resources/temp/cmd.txt ; echo -e \""+text+ "\" > ./resources/temp/cmd.txt");
 		_team.submit(createFile);
-
-
-
 	}
 
 	/**
@@ -788,8 +786,8 @@ public class CreateMenuController implements Initializable{
 		_festivalVoice.getSelectionModel().clearAndSelect(0);
 
 		_runningThread = false;
-		initializeSetImages(template);
 		_template=template;
+		initializeSetImages(template);
 	}
 
 	/**
@@ -839,7 +837,9 @@ public class CreateMenuController implements Initializable{
 		 */
 		_imageSelection.setSelected(data.usingImages());
 		setup(text,term,data);
-
+		if(data.getBGM() != null) {
+			_musicChoiceBox.getSelectionModel().select(data.getBGM());
+		}
 	}
 
 
@@ -872,8 +872,6 @@ public class CreateMenuController implements Initializable{
 			TemplateData data = new TemplateData(this);
 			oos.writeObject(data);
 			oos.close();
-			notification(_videoName.getText() + " saved");
-
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -903,6 +901,10 @@ public class CreateMenuController implements Initializable{
 
 	public String getTerm() {
 		return _term;
+	}
+
+	public String getBGM() {
+		return _musicChoiceBox.getSelectionModel().getSelectedItem();
 	}
 
 
