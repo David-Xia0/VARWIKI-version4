@@ -1,8 +1,14 @@
 # VARWIKI - User Manual 
 
 
-[TOC]
 
+## Table of contents
+
+<!--ts-->
+   * [Launching](#launching)
+      *[Set Up](#set-up)
+      *[Running Application](#running-application)
+<!--te-->
 
 
 ## Launching
