@@ -23,9 +23,12 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 
 public class QuizMenuController {
 
@@ -43,31 +46,38 @@ public class QuizMenuController {
 	private URL location;
 
 	@FXML
-	private Button _backButton;
+    private Button _backButton;
 
-	@FXML
-	private Button _guess1Button;
+    @FXML
+    private HBox _hbox;
 
-	@FXML
-	private Button _guess2Button;
+    @FXML
+    private Button _guess1Button;
 
-	@FXML
-	private Button _guess3Button;
+    @FXML
+    private Button _guess2Button;
 
-	@FXML
-	private Button _guess4Button;
+    @FXML
+    private Button _guess3Button;
 
-	@FXML
-	private Button _nextQuestionButton;
+    @FXML
+    private Button _guess4Button;
 
-	@FXML
-	private HBox _hbox;
+    @FXML
+    private Button _nextQuestionButton;
+
+    @FXML
+    private ProgressIndicator _videoLoading;
+
+    @FXML
+    private Text _resultText;
+
 
 
 
 	@FXML
 	void handleNextQuestion(ActionEvent event) {
-
+		exit(SceneType.QuizMenu);
 	}
 
 	@FXML
@@ -80,15 +90,13 @@ public class QuizMenuController {
 			ObjectInputStream object = new ObjectInputStream(fileIn);
 			TemplateData template = (TemplateData) object.readObject();
 			if(template.getTerm().contentEquals(answer)) {
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("Correct");
-				alert.setContentText("Nice! you got the answer correct");
-				alert.showAndWait();
+				_resultText.setText("Nice! You got it Correct!");
+				_resultText.setSelectionFill(Paint.valueOf("#35f20b"));
+				_resultText.setVisible(true);
 			}else {
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("Incorrect");
-				alert.setContentText("Sorry! correct Answer was: "+ template.getTerm());
-				alert.showAndWait();
+				_resultText.setText("Sorry! Correct Answer Was "+_creations.get((int)randomCreation));
+				_resultText.setSelectionFill(Paint.valueOf("#d70606"));
+				_resultText.setVisible(true);
 			}
 			object.close();
 		} catch (FileNotFoundException e) {
@@ -101,8 +109,7 @@ public class QuizMenuController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		exit(SceneType.QuizMenu);
+		_nextQuestionButton.setVisible(true);
 	}
 
 
@@ -187,7 +194,6 @@ public class QuizMenuController {
 
 				@Override
 				public void handle(WorkerStateEvent event) {
-					
 					loadVideo();
 				}
 			});
@@ -212,6 +218,8 @@ public class QuizMenuController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		_videoLoading.setVisible(false);
 	}
 
 	private Object exit(SceneType location) {

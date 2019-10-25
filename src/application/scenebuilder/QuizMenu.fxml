@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: lightorange;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.scenebuilder.QuizMenuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.scenebuilder.QuizMenuController">
    <children>
       <Button fx:id="_backButton" layoutX="729.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleReturn" style="-fx-background-color: f10101;" text="back" />
       <HBox fx:id="_hbox" layoutX="47.0" layoutY="151.0" prefHeight="355.0" prefWidth="423.0" />
@@ -31,7 +32,12 @@
          <font>
             <Font name="System Bold Italic" size="15.0" />
          </font></Button>
-      <Button fx:id="_nextQuestionButton" layoutX="562.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleNextQuestion" style="-fx-background-color: lightblue;" text="Next Question" />
-      <HBox layoutX="462.0" layoutY="164.0" prefHeight="336.0" prefWidth="336.0" style="-fx-background-color: lightgreen;" visible="false" />
+      <Button fx:id="_nextQuestionButton" layoutX="562.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleNextQuestion" style="-fx-background-color: lightblue;" text="Next Question" visible="false" />
+      <ProgressIndicator fx:id="_videoLoading" layoutX="213.0" layoutY="518.0" prefHeight="42.0" prefWidth="76.0" />
+      <Text fx:id="_resultText" fill="#35f20b" layoutX="501.0" layoutY="511.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" wrappingWidth="261.7294921875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

@@ -111,13 +111,11 @@ public class VideoCreator extends Task<Void>{
 		System.out.println(audioFileNames);
 		_team.submit(mergeAudio);	
 		mergeAudio.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+			
 			@Override
-
 			public void handle(WorkerStateEvent event) {
 				System.out.println("-1");
 				RunBash audioLengthSoxi = new RunBash("soxi -D ./resources/temp/output.wav");
-
-				_team.submit(audioLengthSoxi);
 				audioLengthSoxi.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 					@Override
 					public void handle(WorkerStateEvent event) {
@@ -156,6 +154,7 @@ public class VideoCreator extends Task<Void>{
 
 					}
 				});
+				_team.submit(audioLengthSoxi);
 			}
 		});
 		while(!createFinished) {
