@@ -1,4 +1,4 @@
-package application;
+package application.creators;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import application.RunBash;
 import application.scenebuilder.CreateMenuController;
 import application.scenebuilder.TemplateData;
 import javafx.concurrent.Task;
@@ -43,7 +44,7 @@ public class VideoCreator extends Task<Void>{
 		for(String image: selectedImages) {
 			_selectedImages.add(image.substring(0, image.lastIndexOf(".")));
 		}
-		resourceLocation = "/temp/";
+		resourceLocation = "/temp";
 		outputLocation = "./resources/VideoCreations/"+name+".mp4";
 	}
 
@@ -109,12 +110,11 @@ public class VideoCreator extends Task<Void>{
 
 		RunBash mergeAudio = new RunBash("sox "+ audioFileNames +" ./resources/temp/output.wav");
 		System.out.println(audioFileNames);
-		_team.submit(mergeAudio);	
+		
 		mergeAudio.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 			
 			@Override
 			public void handle(WorkerStateEvent event) {
-				System.out.println("-1");
 				RunBash audioLengthSoxi = new RunBash("soxi -D ./resources/temp/output.wav");
 				audioLengthSoxi.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 					@Override
@@ -144,8 +144,7 @@ public class VideoCreator extends Task<Void>{
 							createVideo.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 								@Override
 								public void handle(WorkerStateEvent event) {
-									//(new BGM(_music)).mergeBGM(name,audioLength);
-									//exit here
+									(new BGM(_music)).mergeBGM(name,audioLength);
 									createFinished=true;
 								}
 							});
@@ -157,12 +156,12 @@ public class VideoCreator extends Task<Void>{
 				_team.submit(audioLengthSoxi);
 			}
 		});
+		_team.submit(mergeAudio);	
 		while(!createFinished) {
 			if(_team.isTerminated()) {
 				createFinished=true;
 			}
 		}
-		System.out.println("hi");
 		return null;
 
 	}

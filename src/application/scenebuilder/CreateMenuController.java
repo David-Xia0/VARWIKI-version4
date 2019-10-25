@@ -19,6 +19,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import application.Main.SceneType;
+import application.creators.AudioCreator;
+import application.creators.VideoCreator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
@@ -75,6 +77,7 @@ public class CreateMenuController implements Initializable{
 	private boolean _defaultImages=true;
 	private int _i;
 	private TemplateData _template;
+	private String _selectedText;
 
 
 	@FXML
@@ -149,16 +152,6 @@ public class CreateMenuController implements Initializable{
 	}
 
 
-
-	/**
-	 * this saves all text in box, regardless of what is selected
-	 */
-	@FXML
-	private void saveAllAudio(){
-		_displayTextArea.selectAll();
-		handleSaveAudio();
-		_displayTextArea.deselect();
-	}
 
 	/**
 	 * creation button used to build the final video
@@ -266,83 +259,18 @@ public class CreateMenuController implements Initializable{
 	 * THis method contains most/all of the bash and ffmpeg commands used in video creation
 	 */
 	public void createVideo() {
-		List<String> images = getSelectedImages();
-		String name = _videoName.getText();
-		String audioFileNames="";
+		_runningThread=true;
+		VideoCreator creator = new VideoCreator(this);
+		_team.submit(creator);
+		creator.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
-		for(Node audio:_audioList) {
-			audioFileNames = audioFileNames+audio.toString()+".wav ";
-		}		
-		System.out.println(name + " " + audioFileNames + " " + images.size());
-		RunBash mergeAudio = new RunBash("sox "+ audioFileNames +" ./resources/temp/output.wav");
-		_team.submit(mergeAudio);	
-		mergeAudio.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 			@Override
-			public void handle(WorkerStateEvent event) {
-				RunBash audioLengthSoxi = new RunBash("soxi -D ./resources/temp/output.wav");
-				_team.submit(audioLengthSoxi);
-				_runningThread = true;
-				audioLengthSoxi.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-					@Override
-					public void handle(WorkerStateEvent event) {
-						_runningThread=false;
-						double audioLength;
-
-						try {
-							audioLength = Double.parseDouble(audioLengthSoxi.get().get(0));
-							RunBash createVideoAudio = new RunBash("ffmpeg -i ./resources/temp/output.wav -vn -ar 44100 -ac 2 -b:a 192k ./resources/temp/output.mp3 &> /dev/null ");
-							_team.submit(createVideoAudio);
-							RunBash createVideo2;
-							if(!_imageSelection.isSelected()) {
-								createVideo2 = new RunBash( "ffmpeg -f lavfi -i color=c=blue:s=320x240:d="+audioLength 
-										+ " -vf \"drawtext=fontfile=/path/to/font.ttf:fontsize=30: "
-										+ "fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:text="+_term+"\" ./resources/temp/"+name+"NoImage.mp4 &> /dev/null ;"
-										+ "ffmpeg -i ./resources/temp/"+name +"NoImage.mp4 -i ./resources/temp/output.mp3 -c:v copy -c:a aac -strict experimental "
-										+ "./resources/VideoCreations/"+name+".mp4  &> /dev/null");
-							} else {
-								markImages(images);
-								textFileBuilder(images,audioLength);
-								videoMaker();
-								createVideo2 = new RunBash("ffmpeg -i ./resources/temp/"+name +".mp4 -i ./resources/temp/output.mp3 -c:v copy -c:a aac -strict experimental "
-										+ "./resources/VideoCreations/"+name+".mp4  &> /dev/null");
-
-							}
-							_team.submit(createVideo2);
-							_runningThread = true;
-							createVideo2.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-								@Override
-								public void handle(WorkerStateEvent event) {
-
-									(new BGM(_musicChoiceBox.getSelectionModel().getSelectedItem())).mergeBGM(__videoName,audioLength);
-									_runningThread=false;
-									exit();
-								}
-							});
-						} catch (NumberFormatException | InterruptedException | ExecutionException e) {
-							error("Video Creation Failed");
-							_runningThread=false;
-							exit();
-						}
-					}
-				});
-
+			public void handle(WorkerStateEvent arg0) {
+				exit();
+				_runningThread=false;
 			}
 		});
 	}
-
-
-	/**
-	 * this method marks the images with the topic text
-	 * @param images
-	 */
-	private void markImages(List<String> images) {
-		for (String path: images) {
-
-			RunBash mark= new RunBash("ffmpeg -i ./resources/temp/images/" + path + " -vf \"drawtext=text='"+ _term + "':fontcolor=white:fontsize=75:x=(w-text_w)/2: y=(h-text_h-line_h)/2:\" ./resources/temp/" + path);
-			_team.submit(mark);
-		}
-	}
-
 
 
 	/**
@@ -393,9 +321,7 @@ public class CreateMenuController implements Initializable{
 		}
 
 	}
-	public boolean usingImages() {
-		return _imageSelection.isSelected();
-	}
+
 
 	/**
 	 * allows user to select whether to create a video using the text in box, if user has not manually selected text
@@ -469,114 +395,46 @@ public class CreateMenuController implements Initializable{
 	}
 
 	/**
-	 * Saves highlighted text as audio file
-	 * 
+	 * this saves all text in box, regardless of what is selected
 	 */
 	@FXML
-	void handleSaveAudio() {
-		handleSaveAudio(20);
-	}
-	void handleSaveAudio(int length) {
-		if(_runningThread ==true) {
-			return;
-		}else{_runningThread = true;}
-		_team.submit(new RunBash("mkdir ./resources/temp/tmpaudio"));
-		_cancel = false;
-		int maxLength = length;
-		_saving = true;
-		int extra;
-		String selectedText = _displayTextArea.getSelectedText();
-		String[] wordCount = selectedText.split("\\s+");
+	private void saveAllAudio(){
+		_displayTextArea.selectAll();
+		handleSaveAudio();
+		_displayTextArea.deselect();
+	}	
 
-		if(selectedText.isEmpty()) {
-			_saving=false;
+	@FXML
+	private void handleSaveAudio() {
+		_selectedText=_displayTextArea.getSelectedText();
+
+		if(_runningThread ==true || _selectedText.isEmpty()) {
 			return;
 		}
-		List<RunBash>commandList = new ArrayList<RunBash>();
-		List<String>audioList = new ArrayList<String>();
-		if(length%maxLength!=0) {
-			extra = 1;
-		}else {
-			extra = 0;
-		}
-		System.out.println(extra);
-		for(_i =0; _i<=wordCount.length/maxLength + extra; _i++) {
-			String audio = "";
-			for (int j=0; j<maxLength; j++) {
-				int index = maxLength*_i + j;
-				if(index<wordCount.length) {
-					audio = audio + wordCount[index] + " ";
-				}
-			}
-			System.out.println(_i);
-			audioList.add(audio);
-			commandList.add(saveAudio(audio));
-		} 
-		RunBash lastCommand = commandList.get(commandList.size()-1);
-		lastCommand.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+
+		_runningThread = true;
+		AudioCreator createAudio = new AudioCreator(this);
+		_team.submit(createAudio);
+		createAudio.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
 			@Override
 			public void handle(WorkerStateEvent arg0) {
-				if(lastCommand.returnError() != null &&lastCommand.returnError().substring(0, 10).contentEquals("SIOD ERROR")) {
-					error("some words selected cannot be converted by selected voice package");
-					_cancel = true;
-				}
-				if(_cancel) {
-					return;
-				}
-				String audioFileNames="";
-				for(int i =0; i<audioList.size(); i++) {
-					audioFileNames = audioFileNames+ "./resources/temp/tmpaudio/" + i+".wav ";	
-				}	
-				System.out.println(audioFileNames);
-				RunBash mergeAudio = new RunBash("sox "+ audioFileNames + "./resources/temp/audio/" + audioCount + ".wav");
-				_team.submit(mergeAudio);	
-				_team.submit(new RunBash("rm -rf ./resources/temp/tmpaudio"));
-				mergeAudio.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-
-					@Override
-					public void handle(WorkerStateEvent arg0) {
-						_saving=false;
-						new AudioBar(selectedText,audioCount+"",_audioList);
+				try {
+					if(createAudio.get()) {
+						new AudioBar(_selectedText,audioCount+"",_audioList);
 						_audioBox.setItems(_audioList);
 						audioCount++;
-						_runningThread = false;
 					}
-				});
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
+				_runningThread = false;
 			}
 		});
-		for(int i =0; i<commandList.size(); i++) {
-			_team.submit(commandList.get(i));
-		}
-
-
 	}
 
-
-
-	private RunBash saveAudio(String selectedText){
-		int audiocount;
-		RunBash audioCreation;
-		audiocount = _i;
-		String voice = _festivalVoice.getSelectionModel().getSelectedItem();
-
-		if( voice ==null || voice.contentEquals("Default") ) {
-			audioCreation = new RunBash("echo \"" + selectedText + "\" | text2wave -o ./resources/temp/tmpaudio/"+ audiocount + ".wav");
-		}else {
-			audioCreation = new RunBash("echo \"" + selectedText + "\" | text2wave -o ./resources/temp/tmpaudio/"+ audiocount + ".wav " + "-eval \""+_festivalVoice.getSelectionModel().getSelectedItem()+"\"");
-			audioCreation.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-				@Override
-				public void handle(WorkerStateEvent event) {
-					_runningThread=false;
-					if(audioCreation.returnError() != null && audioCreation.returnError().substring(0, 10).contentEquals("SIOD ERROR")) {
-						error("some words selected cannot be converted by selcted voice package");
-						_cancel = true;
-					}
-				}
-			});
-		}
-		return audioCreation;
-	}
 
 	/**
 	 * plays a preview of the selected audio text
@@ -584,80 +442,44 @@ public class CreateMenuController implements Initializable{
 	 */
 	@FXML
 	void handleTestAudio(ActionEvent event) {
-		_team.submit(new RunBash("mkdir ./resources/temp/tmpaudio"));
-		_cancel = false;
-		int length = 20;
-		int maxLength = length;
-		_saving = true;
-		int extra;
-		String selectedText = _displayTextArea.getSelectedText();
-		String[] wordCount = selectedText.split("\\s+");
 
-		if(selectedText.isEmpty()) {
-			_saving=false;
+		if(_selectedText.isEmpty() || _runningThread) {
 			return;
 		}
-		List<RunBash>commandList = new ArrayList<RunBash>();
-		List<String>audioList = new ArrayList<String>();
-		if(length%maxLength!=0) {
-			extra = 1;
+
+		String voice = _festivalVoice.getSelectionModel().getSelectedItem();
+		if(voice == null ||voice.contentEquals("Default")) {
+			RunBash audioCreation = new RunBash("echo \"" + _selectedText + "\" | festival --tts");
+			_team.submit(audioCreation);
+			_runningThread = true;
+			audioCreation.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+				@Override
+				public void handle(WorkerStateEvent event) {
+					_runningThread=false;
+				}
+			});
+
 		}else {
-			extra = 0;
-		}
-		System.out.println(extra);
-		for(_i =0; _i<=wordCount.length/maxLength + extra; _i++) {
-			String audio = "";
-			for (int j=0; j<maxLength; j++) {
-				int index = maxLength*_i + j;
-				if(index<wordCount.length) {
-					audio = audio + wordCount[index] + " ";
-				}
-			}
-			System.out.println(_i);
-			audioList.add(audio);
-			commandList.add(saveAudio(audio));
-		} 
-		RunBash lastCommand = commandList.get(commandList.size()-1);
-		lastCommand.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-
-			@Override
-			public void handle(WorkerStateEvent arg0) {
-				if(lastCommand.returnError() != null &&lastCommand.returnError().substring(0, 10).contentEquals("SIOD ERROR")) {
-					error("some words selected cannot be converted by selected voice package");
-					_cancel = true;
-				}
-				if(_cancel) {
-					return;
-				}
-				String audioFileNames="";
-				for(int i =0; i<audioList.size(); i++) {
-					audioFileNames = audioFileNames+ "./resources/temp/tmpaudio/" + i+".wav ";	
-				}	
-				System.out.println(audioFileNames);
-				RunBash mergeAudio = new RunBash("sox "+ audioFileNames + "./resources/temp/tmpaudio/audiopreview.wav");
-				mergeAudio.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-
-					@Override
-					public void handle(WorkerStateEvent arg0) {
-						_saving=false;
+			RunBash audioCreation = new RunBash("echo {\""+voice+"\",'(SayText \""+_selectedText+"\")'} | bash -c festival");
+			_team.submit(audioCreation);
+			_runningThread = true;
+			audioCreation.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+				@Override
+				public void handle(WorkerStateEvent event) {
+					_runningThread=false;
+					if(audioCreation.returnError() != null && audioCreation.returnError().substring(0, 10).contentEquals("SIOD ERROR")) {
+						error("some words selected cannot be converted by selcted voice package");
+						return;
 					}
-				});
-				_team.submit(mergeAudio);	
-				_team.submit(new RunBash("rm -rf ./resources/temp/tmpaudio"));
-
-			}
-		});
-		for(int i =0; i<commandList.size(); i++) {
-			_team.submit(commandList.get(i));
+				}
+			});
 		}
-
-
-
 	}
+
 
 	/*
 	 * 
-	 * The following five methods are used to edit play existing creations
+	 * The following five methods are used to edit play existing audio chunks
 	 */
 	private boolean checkAudioBar() {
 		if(_audioBox.getSelectionModel().getSelectedItem()==null) {
@@ -716,34 +538,6 @@ public class CreateMenuController implements Initializable{
 			images.add(name.toString());
 		}
 		return images;
-	}
-
-	/**
-	 * builds text file used for ffmpeg command to create slideshow video
-	 * @param images
-	 * @param totalDuration
-	 */
-	private void textFileBuilder(List<String> images, double totalDuration) {
-		double duration = totalDuration/images.size();
-		String stringDuration = Double.toString(duration);
-		String text = ""; 	
-		String lastImage="";
-		for(String name:images) {
-			text= text +"file '" + name +"'\nduration " + stringDuration + "\n";
-			lastImage=name;
-		}
-		text=text+"file '"+lastImage+"'";
-
-		RunBash createFile = new RunBash("touch ./resources/temp/cmd.txt ; echo -e \""+text+ "\" > ./resources/temp/cmd.txt");
-		_team.submit(createFile);
-	}
-
-	/**
-	 * creates slideshow from stored and selected images
-	 */
-	private void videoMaker() {
-		RunBash makeVideo = new RunBash("ffmpeg -f concat -safe 0 -i ./resources/temp/cmd.txt -r 25 -pix_fmt yuv420p -vf 'scale=trunc(iw/2)*2:trunc(ih/2)*2'  ./resources/temp/"+ __videoName +".mp4");
-		_team.submit(makeVideo);
 	}
 
 
@@ -891,6 +685,13 @@ public class CreateMenuController implements Initializable{
 		exit(SceneType.MainMenu);
 	}
 
+	
+	/*
+	 * The following are all getters, this helps to translate GUI input information into back end classes used for
+	 * video/audio Creation and other purposes
+	 *
+	 */
+
 	public String getText() {
 		return _displayTextArea.getText();
 	}
@@ -907,20 +708,28 @@ public class CreateMenuController implements Initializable{
 		return _musicChoiceBox.getSelectionModel().getSelectedItem();
 	}
 
-
+	public String getSelectedText() {
+		return _displayTextArea.getSelectedText();
+	}
 
 	public List<String> getAudioText() {
 		List<String> audioText = new ArrayList<String>();
 		for(Node node : _audioList) {
-
-			//if(node.getClass().getName() == "application.scenebuilder.AudioBar") {
 			audioText.add(((AudioBar) node).getText());
-			//}
-
 		}
 
 		return audioText;
 	}
+
+	public String getVoicePackage() {
+		return _festivalVoice.getSelectionModel().getSelectedItem();
+	}
+
+
+	public boolean usingImages() {
+		return _imageSelection.isSelected();
+	}
+
 
 	public List<String> fileOrder() {
 		List<String> files = new ArrayList<String>();

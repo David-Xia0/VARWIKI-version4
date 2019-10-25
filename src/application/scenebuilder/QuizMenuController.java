@@ -15,8 +15,8 @@ import java.util.concurrent.Executors;
 
 import application.Main;
 import application.RunBash;
-import application.VideoCreator;
 import application.Main.SceneType;
+import application.creators.VideoCreator;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -38,6 +38,7 @@ public class QuizMenuController {
 	private double randomCreation;
 	private List<Double> _answerOptions = new ArrayList<Double>();
 	private List<Button> _answerButtons;
+	private boolean _threadRunning;
 
 	@FXML
 	private ResourceBundle resources;
@@ -46,31 +47,31 @@ public class QuizMenuController {
 	private URL location;
 
 	@FXML
-    private Button _backButton;
+	private Button _backButton;
 
-    @FXML
-    private HBox _hbox;
+	@FXML
+	private HBox _hbox;
 
-    @FXML
-    private Button _guess1Button;
+	@FXML
+	private Button _guess1Button;
 
-    @FXML
-    private Button _guess2Button;
+	@FXML
+	private Button _guess2Button;
 
-    @FXML
-    private Button _guess3Button;
+	@FXML
+	private Button _guess3Button;
 
-    @FXML
-    private Button _guess4Button;
+	@FXML
+	private Button _guess4Button;
 
-    @FXML
-    private Button _nextQuestionButton;
+	@FXML
+	private Button _nextQuestionButton;
 
-    @FXML
-    private ProgressIndicator _videoLoading;
+	@FXML
+	private ProgressIndicator _videoLoading;
 
-    @FXML
-    private Text _resultText;
+	@FXML
+	private Text _resultText;
 
 
 
@@ -82,6 +83,10 @@ public class QuizMenuController {
 
 	@FXML
 	void handleCheckAnswer(ActionEvent event) {
+		if(_threadRunning) {
+			return;
+		}
+		
 		String answer = ((Button)event.getSource()).getText();
 
 		String data = Main.getPathToResources() + "/templates/" +  _creations.get((int)randomCreation) + "/info.class";
@@ -115,17 +120,19 @@ public class QuizMenuController {
 
 	@FXML
 	void handleReturn(ActionEvent event) {
-		exit(SceneType.MainMenu);
+		if(!_threadRunning) {
+			exit(SceneType.MainMenu);
+		}
 	}
 
 	@FXML
 	void initialize() {
 
 		_answerButtons =  new ArrayList<>(Arrays.asList(_guess1Button, _guess2Button, _guess3Button, _guess4Button));
-		
-		
-		
-		
+
+
+
+
 		RunBash bash = new RunBash("List=`ls ./resources/VideoCreations` ; List=${List//.???/} ; printf \"${List// /.\\\\n}\\n\"");
 		_team.submit(bash);
 		bash.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
@@ -218,7 +225,7 @@ public class QuizMenuController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		_videoLoading.setVisible(false);
 	}
 

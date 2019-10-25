@@ -41,36 +41,6 @@ public class AudioBar extends HBox{
 
 	
 	public void delete() {
-		/*
-		if(!_deleteOption) {
-			_deleteOption=true;
-			Text confirm = new Text("Are you sure? ");
-
-			Button yesButton = new Button("yes");
-			Button noButton = new Button("no");
-
-			yesButton.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent event) {
-					_parent.remove(_bar);
-					}
-
-
-		
-			});
-
-			noButton.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent event) {
-					_bar.getChildren().removeAll(confirm,yesButton,noButton);	
-					_bar.getChildren().addAll(_text);
-					_deleteOption=false;
-				}
-			});
-
-			_bar.getChildren().removeAll(_text);
-			_bar.getChildren().addAll(confirm,yesButton,noButton);
-			*/
 			_parent.remove(_bar);
 		}
 		
