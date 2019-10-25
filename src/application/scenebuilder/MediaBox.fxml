@@ -10,9 +10,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<fx:root prefHeight="385.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane prefHeight="30.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <AnchorPane prefHeight="30.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Button fx:id="muteButton" mnemonicParsing="false" onAction="#handleMute" text="Mute" AnchorPane.bottomAnchor="11.0" AnchorPane.rightAnchor="5.0">
                <font>
@@ -33,7 +33,7 @@
             <Text fx:id="_videoTime" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="00:00" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="10.0" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="player" AnchorPane.bottomAnchor="60.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="player" style="-fx-background-color: black;" AnchorPane.bottomAnchor="30.0">
          <children>
             <MediaView fx:id="_view" fitHeight="280.0" fitWidth="360.0" layoutX="46.0" layoutY="14.0" onMouseClicked="#handleVideoMultiButton" preserveRatio="false" smooth="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <viewport>

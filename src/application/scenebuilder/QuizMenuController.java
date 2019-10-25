@@ -215,7 +215,7 @@ public class QuizMenuController {
 	}
 
 	private void loadVideo() {
-
+	    _player.pause();
 		URL mediaUrl;
 		try {
 			mediaUrl = new File(Main.getPathToResources() + "/temp/matchingVideo.mp4").toURI().toURL();
@@ -230,6 +230,7 @@ public class QuizMenuController {
 	}
 
 	private Object exit(SceneType location) {
+		_player.pause();
 		return Main.changeScene(location, this);
 	}
 }

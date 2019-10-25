@@ -114,7 +114,10 @@ public class SearchController {
 	 * @return
 	 */
 	private Object exit(SceneType location,boolean destroy) {
-		return Main.changeScene(location, this, destroy);
+		if(destroy) {
+			Main.initiateFileSystem();
+		}
+		return Main.changeScene(location, this);
 	}
 
 }

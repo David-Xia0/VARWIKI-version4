@@ -7,24 +7,18 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.scenebuilder.MainMenuController">
    <children>
-      <AnchorPane prefHeight="600.0" prefWidth="800.0">
+      <AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-image: url(&quot;resources/background.jpg&quot;);">
          <children>
             <Button fx:id="_deleteButton" layoutX="306.0" layoutY="493.0" mnemonicParsing="false" onAction="#handleDeleteVideo" style="-fx-background-color: f10101;" text="Delete" />
-            <Text layoutX="33.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome To VARWIKI">
-               <font>
-                  <Font name="System Bold" size="62.0" />
-               </font>
-            </Text>
             <Button fx:id="_createButton" layoutX="31.0" layoutY="493.0" mnemonicParsing="false" onAction="#handleCreate" style="-fx-background-color: lightblue;" text="Create New Creation" />
             <HBox fx:id="_hbox" layoutX="31.0" layoutY="108.0" spacing="30.0">
                <children>
-                  <ScrollPane prefHeight="385.0" prefWidth="334.0">
+                  <ScrollPane prefHeight="310.0" prefWidth="334.0">
                      <content>
-                        <ListView fx:id="videoListView" onMouseClicked="#handleSelectionChange" prefHeight="384.0" prefWidth="307.0" />
+                        <ListView fx:id="videoListView" onMouseClicked="#handleSelectionChange" prefHeight="308.0" prefWidth="332.0" />
                      </content>
                   </ScrollPane>
                </children>
