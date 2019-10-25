@@ -45,6 +45,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		initiateFileSystem();
 		//creates loading screen
 		Stage loaderStage = new Stage();
 		loaderStage.initStyle(StageStyle.TRANSPARENT);

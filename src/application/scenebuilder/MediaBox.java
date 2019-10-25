@@ -13,6 +13,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
@@ -72,6 +74,9 @@ public class MediaBox extends AnchorPane{
 	private boolean _Setup;
 	private List<EventHandler<ActionEvent>> _actionsToSet;
 	private List<Button> _on;
+
+	@FXML
+	private Label _label;
 
 
 	/**
@@ -243,6 +248,10 @@ public class MediaBox extends AnchorPane{
 			_muted= !_muted;
 			_player.setMute(_muted);
 		}
+	}
+	
+	public void addLabel(String text) {
+		_label.setText(text);
 	}
 
 

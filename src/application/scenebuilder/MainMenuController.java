@@ -90,33 +90,20 @@ public class MainMenuController implements Initializable{
 
 			URL mediaUrl;
 			try {
+				String data = Main.getPathToResources() + "/templates/" +  asText.getText() + "/info.class";
+				FileInputStream fileIn = new FileInputStream(data);
+				ObjectInputStream object = new ObjectInputStream(fileIn);
+				TemplateData template = (TemplateData) object.readObject();
+				String name = template.getName();
+				object.close();
 				mediaUrl = new File(Main.getPathToResources() + "/VideoCreations/"+asText.getText()+".mp4").toURI().toURL();
 				Media newMedia = new Media(mediaUrl.toExternalForm());
 				_playerBox.setMedia(newMedia);
+				_playerBox.addLabel(name);
 			} catch (Exception e) {
 				//e.printStackTrace();
 			}
 
-			//sets button funcitonality in Video Player
-			if(_actionsSet) {
-				_playerBox.SetOnForwardAction(new EventHandler<ActionEvent>() {
-					@Override
-					public void handle(ActionEvent arg0) {
-						playNext();
-					}
-				});
-				_playerBox.SetOnBackwardAction(new EventHandler<ActionEvent>() {
-					@Override
-					public void handle(ActionEvent arg0) {
-						if(_playerBox.getTimeMillis()>=_playerBox.getTotalDuration()/5) {
-							_playerBox.setTime(new Duration(0));
-						} else {
-							playPrev();
-						}
-					}
-				});
-				_actionsSet=true;
-			}
 		}
 	}
 
@@ -284,22 +271,6 @@ public class MainMenuController implements Initializable{
 		setLockButtons();
 	}
 
-
-	/**
-	 * sets the video before the current selection into the Media Player
-	 */
-	public void playPrev() {
-		videoListView.getSelectionModel().selectPrevious();
-		setNewMedia();
-	}
-
-	/**
-	 * sets the video after the current selection into the media Player
-	 */
-	public void playNext() {
-		videoListView.getSelectionModel().selectNext();
-		setNewMedia();
-	}
 
 	/**
 	 * helper method that creates an error message popup that contains pararmeter input msg
