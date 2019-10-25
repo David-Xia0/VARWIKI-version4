@@ -96,7 +96,7 @@ Video Creation, Modification and Deletion should all be done under parental guid
 3) Save text to speech translation fo highlighted selection of text within 1)
 4) Save all text within 1) as text to speech audio
 
-![CreateMenuVoice](/UserManualImages/CreateMenuVoice.png)
+![CreateMenuFestival](/UserManualImages/CreateMenuFestival.png)
 
 1) Audio chunks are stored in this list. (The final video created will contain the audio stored in this list according to the vertical order)
 2) Selected audio chunk can be played back
@@ -116,7 +116,7 @@ Video Creation, Modification and Deletion should all be done under parental guid
 
 ## Image Selection
 
-![ImageSelection](/UserManulImages/ImageSelection.png)
+![ImageSelection](/UserManualImages/ImageSelection.png)
 
 1) Clicking on any image within the grid will select or deselect that image
 
