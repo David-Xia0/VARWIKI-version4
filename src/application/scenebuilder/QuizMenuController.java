@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,7 +87,7 @@ public class QuizMenuController {
 		if(_threadRunning) {
 			return;
 		}
-		
+
 		String answer = ((Button)event.getSource()).getText();
 
 		String data = Main.getPathToResources() + "/templates/" +  _creations.get((int)randomCreation) + "/info.class";
@@ -127,7 +128,7 @@ public class QuizMenuController {
 
 	@FXML
 	void initialize() {
-
+		_videoLoading.setVisible(false);
 		_answerButtons =  new ArrayList<>(Arrays.asList(_guess1Button, _guess2Button, _guess3Button, _guess4Button));
 
 
@@ -186,9 +187,17 @@ public class QuizMenuController {
 
 	private void setNewMedia() {
 		//setup(currentSelection);	
+		URL mediaUrl;
+		try {
+			mediaUrl = new File(Main.getPathToResources() + "/VideoCreations/"+_creations.get((int)randomCreation)+".mp4").toURI().toURL();
+			Media newMedia = new Media(mediaUrl.toExternalForm());
+			_player.setMedia(newMedia);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-
-		String data = Main.getPathToResources() + "/templates/" +  _creations.get((int)randomCreation) + "/info.class";
+		/**
 		try {
 			FileInputStream fileIn = new FileInputStream(data);
 			ObjectInputStream object = new ObjectInputStream(fileIn);
@@ -210,12 +219,12 @@ public class QuizMenuController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		 */
 
 	}
 
 	private void loadVideo() {
-	    _player.pause();
+		_player.pause();
 		URL mediaUrl;
 		try {
 			mediaUrl = new File(Main.getPathToResources() + "/temp/matchingVideo.mp4").toURI().toURL();
@@ -226,7 +235,7 @@ public class QuizMenuController {
 			e.printStackTrace();
 		}
 
-		_videoLoading.setVisible(false);
+	
 	}
 
 	private Object exit(SceneType location) {

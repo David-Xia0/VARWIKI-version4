@@ -135,7 +135,7 @@ public class VideoCreator extends Task<Void> {
 										+ " -vf \"drawtext=fontfile=/path/to/font.ttf:fontsize=30: "
 										+ "fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:text=" + term
 										+ "\" ./resources/temp/" + name + "noImage.mp4 &> /dev/null ;"
-										+ "; ffmpeg -i ./resources/temp/" + name
+										+ " ffmpeg -i ./resources/temp/" + name
 										+ "noImage.mp4 -i ./resources/temp/output.mp3 -c:v copy -c:a aac -strict experimental "
 										+ outputLocation + " &> /dev/null");
 							} else {
