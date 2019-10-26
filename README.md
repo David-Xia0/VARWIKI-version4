@@ -15,7 +15,7 @@ scribejava-apis-6.6.3.jar
 scribejava-core-6.2.0.jar
 slf4j-api-1.7.25.jar  
 slf4j-nop-1.7.26.jar  
-(THE ABOVE LIBRARIES CAN BE FOUND THE IN 206_FlickrExample ACP PROJECT)
+(THE ABOVE LIBRARIES CAN BE FOUND THE IN 206_Flickr_Example ACP PROJECT)
 
 ## Flickr API Keys
 
@@ -27,6 +27,9 @@ This should be relative to the executable jar file.
 Background Music - Calling on Dolphins by fourstones (c) copyright 2016 Licensed under a Creative Commons Attribution Noncommercial  (3.0) license. http://dig.ccmixter.org/files/victor/53226 
 
 Background Image - https://blog.bellalunatoys.com/2010/stockmar-beeswax-crayons-2.html
+
+./src/application/getFlickr.java - Some of the implementation of this class was obtained from the ACP project by Nasser Giacamen 206_Flickr_Example
+
 
 ## Running Application
 
