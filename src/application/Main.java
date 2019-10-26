@@ -17,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
@@ -51,7 +52,7 @@ public class Main extends Application {
 		loaderStage.initStyle(StageStyle.TRANSPARENT);
 		changeScene(SceneType.Loader, this, loaderStage);
 		loaderStage.show();
-	
+		primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/resources/facebook.png")));
 		PauseTransition pause = new PauseTransition(Duration.seconds(3));
 		pause.setOnFinished(event -> {
 				_stage=primaryStage;
