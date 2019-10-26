@@ -22,12 +22,12 @@ slf4j-nop-1.7.26.jar
 Add txt file containing API keys into folder: "./resources/flickr-api-keys.txt"   
 This should be relative to the executable jar file.
 
-## Runnable Jar
+## References
 
-If you have an existing runnable Jar file. Use the following command to run the application
+Background Music - Calling on Dolphins by fourstones (c) copyright 2016 Licensed under a Creative Commons Attribution Noncommercial  (3.0) license. http://dig.ccmixter.org/files/victor/53226 
 
-```bash
-java -j <FileName>.jar
-```
-## BackGround Music
-Calling on Dolphins by fourstones (c) copyright 2016 Licensed under a Creative Commons Attribution Noncommercial  (3.0) license. http://dig.ccmixter.org/files/victor/53226 
+Background Image - https://blog.bellalunatoys.com/2010/stockmar-beeswax-crayons-2.html
+
+## Running Application
+
+referenece user manual
