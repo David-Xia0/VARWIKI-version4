@@ -217,9 +217,10 @@ public class CreateHubController implements Initializable{
 
 		}
 		template.mkdir();
+		System.out.println("really?");
 		_team.submit(new RunBash("cp -rf ./resources/temp/images "+ path));
 		_team.submit(new RunBash("cp -rf ./resources/temp/audio "+ path));
-
+		System.out.println("chief");
 		FileOutputStream fos;
 		try {
 			File file = new File(Main.getPathToResources() + "/templates/"+_videoName.getText() + "/info.class");
@@ -227,8 +228,10 @@ public class CreateHubController implements Initializable{
 			fos = new FileOutputStream(Main.getPathToResources() + "/templates/"+_videoName.getText() + "/info.class");
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			TemplateData data = new TemplateData(this);
+			System.out.println("idk");
 			oos.writeObject(data);
 			oos.close();
+			System.out.println("about that one");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -278,8 +281,7 @@ public class CreateHubController implements Initializable{
 	void handleImages(ActionEvent event) {
 		if(_imageControl ==null) {
 			_imageControl = (ModifyImagesController)Main.changeScene(SceneType.newImages, this);
-			_imageControl.setup(_videoName.getScene());
-			_imageControl.setSelectedImages(_data.getSelectedImages());
+			_imageControl.setup(_videoName.getScene(),_data);
 		}else {
 			_imageControl.setMe();
 		}
