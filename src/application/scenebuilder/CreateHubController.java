@@ -202,6 +202,7 @@ public class CreateHubController implements Initializable{
 	}
 
 	private void handleSaveTemplate(){
+		
 		String path = "./resources/templates/" + _videoName.getText();
 		File template = new File(path);
 		/*if(template.exists()) {
@@ -219,7 +220,6 @@ public class CreateHubController implements Initializable{
 		}*/
 		template.mkdir();
 
-		_team.submit(new RunBash("rm -r ./resources/templates/"+_videoName.getText()));
 		_team.submit(new RunBash("cp -rf ./resources/temp/images "+ path));
 		_team.submit(new RunBash("cp -rf ./resources/temp/audio "+ path));
 	
