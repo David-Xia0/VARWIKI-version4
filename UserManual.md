@@ -120,7 +120,7 @@ This is an exmaple of the screen Unlocked
 
 ## Create Audio
 
-![](/UserManualImages/CreateAudio.png)
+![](/UserManualImages/SaveAudio.png)
 
 1) text obtained from wikipedia is stored here
 2) Select the voice package used in text to speech translation of text
