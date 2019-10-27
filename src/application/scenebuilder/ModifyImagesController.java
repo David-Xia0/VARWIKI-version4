@@ -36,14 +36,13 @@ public class ModifyImagesController implements Initializable{
 	private TemplateData _data;
 
 
+
 	/**
 	 * Initializes the grid pane and sets the nine images obtained from flickr
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		RunBash bash = new RunBash("ls ./resources/temp/images | cut -f1 -d'.'");
-		_team.submit(bash);
-
 		bash.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
 			
@@ -51,6 +50,7 @@ public class ModifyImagesController implements Initializable{
 			@Override
 			public void handle(WorkerStateEvent event) {
 
+				System.out.println("hb");
 				try {
 					_images = bash.get();
 					System.out.println(_images);
@@ -72,8 +72,12 @@ public class ModifyImagesController implements Initializable{
 					int ii=0;
 				}
 				setSelectedImages(_data.getSelectedImages());
+
 			}
-		});
+
+			});
+		_team.submit(bash);
+
 	}
 
 
@@ -123,10 +127,10 @@ public class ModifyImagesController implements Initializable{
 	}
 
 	public void setSelectedImages(List<String> SelectedImages) {
-		if (SelectedImages==null || SelectedImages.isEmpty()) {
-			selectAll();
+		if (SelectedImages.size() == 9) {
 			return;
 		}
+		System.out.println(SelectedImages);
 
 		selectNone();
 		System.out.println("itsnull: "+SelectedImages ==null);

@@ -78,7 +78,9 @@ public class TemplateData implements Serializable {
 		_files = null;
 		List<String> defaultSelection = new ArrayList<String>();
 		for(int i =1; i<10; i++) {
+
 		defaultSelection.add(i+"");
+
 		}
 		_selectedImages =defaultSelection;
 		name = term;

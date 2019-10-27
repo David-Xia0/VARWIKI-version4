@@ -188,7 +188,6 @@ public class CreateHubController implements Initializable{
 	 * THis method contains most/all of the bash and ffmpeg commands used in video creation
 	 */
 	public void createVideo() {
-		System.out.println("hellooo");
 		VideoCreator creator = new VideoCreator(_data);
 		_team.submit(creator);
 		creator.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
@@ -217,10 +216,10 @@ public class CreateHubController implements Initializable{
 
 		}
 		template.mkdir();
-		System.out.println("really?");
+
 		_team.submit(new RunBash("cp -rf ./resources/temp/images "+ path));
 		_team.submit(new RunBash("cp -rf ./resources/temp/audio "+ path));
-		System.out.println("chief");
+	
 		FileOutputStream fos;
 		try {
 			File file = new File(Main.getPathToResources() + "/templates/"+_videoName.getText() + "/info.class");
@@ -228,10 +227,10 @@ public class CreateHubController implements Initializable{
 			fos = new FileOutputStream(Main.getPathToResources() + "/templates/"+_videoName.getText() + "/info.class");
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			TemplateData data = new TemplateData(this);
-			System.out.println("idk");
+		
 			oos.writeObject(data);
 			oos.close();
-			System.out.println("about that one");
+		
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
