@@ -4,11 +4,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import application.RunBash;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 
 public class BGM {
 
 	private String _bgm;
 	private ExecutorService _team = Executors.newSingleThreadExecutor(); 
+	private RunBash _concateBGM;
 	
 	public BGM(String mp3name){
 		_bgm=mp3name;
@@ -32,13 +35,17 @@ public class BGM {
 		RunBash truncateBGM = new RunBash("ffmpeg -i ./resources/"+_bgm+" -t "+length+" -acodec copy ./resources/temp/BGM.mp3");
 		System.out.println(length+file);
 		//concates BGM to the video file. 
-		RunBash concateBGM = new RunBash("ffmpeg  -i ./resources/VideoCreations/"+file+".mp4 -i ./resources/temp/BGM.mp3 -filter_complex \"amix=inputs=2\" "
+		_concateBGM = new RunBash("ffmpeg  -i ./resources/VideoCreations/"+file+".mp4 -i ./resources/temp/BGM.mp3 -filter_complex \"amix=inputs=2\" "
 				+ "-map 0:0 -c:a aac -strict -2 -c:v copy ./resources/VideoCreations/"+file+"-.mp4"
 						+ "; cp ./resources/VideoCreations/"+file+"-.mp4 ./resources/VideoCreations/"+file+".mp4 ; rm ./resources/VideoCreations/"+file+"-.mp4 ; ");
 		
 		_team.submit(truncateBGM);
-		_team.submit(concateBGM);
+		_team.submit(_concateBGM);
+		while(!_concateBGM.isDone()) {
+		}
 	}
 	
-	
+	public boolean done() {
+		return _concateBGM.isCancelled();
+	}
 }

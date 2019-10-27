@@ -40,6 +40,7 @@ public class QuizMenuController {
 	private List<Double> _answerOptions = new ArrayList<Double>();
 	private List<Button> _answerButtons;
 	private boolean _threadRunning;
+	private boolean _answered;
 
 	@FXML
 	private ResourceBundle resources;
@@ -69,10 +70,10 @@ public class QuizMenuController {
 	private Button _nextQuestionButton;
 
 	@FXML
-	private ProgressIndicator _videoLoading;
-
-	@FXML
 	private Text _resultText;
+	
+	@FXML
+	private HBox _answerBackground;
 
 
 
@@ -84,7 +85,7 @@ public class QuizMenuController {
 
 	@FXML
 	void handleCheckAnswer(ActionEvent event) {
-		if(_threadRunning) {
+		if(_threadRunning || _answered) {
 			return;
 		}
 
@@ -97,11 +98,11 @@ public class QuizMenuController {
 			TemplateData template = (TemplateData) object.readObject();
 			if(template.getTerm().contentEquals(answer)) {
 				_resultText.setText("Nice! You got it Correct!");
-				_resultText.setSelectionFill(Paint.valueOf("#35f20b"));
+				_resultText.setFill(Paint.valueOf("#30d01b"));
 				_resultText.setVisible(true);
 			}else {
 				_resultText.setText("Sorry! Correct Answer Was "+_creations.get((int)randomCreation));
-				_resultText.setSelectionFill(Paint.valueOf("#d70606"));
+				_resultText.setFill(Paint.valueOf("#d70606"));
 				_resultText.setVisible(true);
 			}
 			object.close();
@@ -115,6 +116,8 @@ public class QuizMenuController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		_answerBackground.setVisible(true);
+		_answered=true;
 		_nextQuestionButton.setVisible(true);
 	}
 
@@ -128,10 +131,7 @@ public class QuizMenuController {
 
 	@FXML
 	void initialize() {
-		_videoLoading.setVisible(false);
 		_answerButtons =  new ArrayList<>(Arrays.asList(_guess1Button, _guess2Button, _guess3Button, _guess4Button));
-
-
 
 
 		RunBash bash = new RunBash("List=`ls ./resources/VideoCreations` ; List=${List//.???/} ; printf \"${List// /.\\\\n}\\n\"");

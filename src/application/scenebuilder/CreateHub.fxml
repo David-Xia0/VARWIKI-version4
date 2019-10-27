@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.scenebuilder.CreateHubController">
+<AnchorPane style="-fx-background-image: url(&quot;resources/background.jpg&quot;);" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.scenebuilder.CreateHubController">
    <children>
       <AnchorPane layoutX="3.0" layoutY="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-image: url(&quot;resources/background&quot;);">
          <children>
@@ -35,7 +35,7 @@
                   <Font name="Chilanka Regular" size="66.0" />
                </font>
             </Text>
-            <CheckBox fx:id="_imageSelection" layoutX="548.0" layoutY="364.0" mnemonicParsing="false" selected="true" text="Include Images" textFill="#116802">
+            <CheckBox fx:id="_imageSelection" layoutX="548.0" layoutY="364.0" mnemonicParsing="false" selected="true" text="Include Images" textFill="#0a0a0a">
                <font>
                   <Font name="Chilanka Regular" size="18.0" />
                </font></CheckBox>

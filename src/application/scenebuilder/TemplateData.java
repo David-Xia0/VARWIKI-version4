@@ -45,7 +45,7 @@ public class TemplateData implements Serializable {
 		_selectedImages = new ArrayList<String>();
 		List<String> selectedImages = template.getSelectedImages();
 		for(String image: selectedImages) {
-			_selectedImages.add(image.substring(0, image.lastIndexOf(".")));
+			_selectedImages.add(image.substring(0, image.lastIndexOf(".jpg")));
 		}
 	}
 	
@@ -79,7 +79,7 @@ public class TemplateData implements Serializable {
 		List<String> defaultSelection = new ArrayList<String>();
 		for(int i =1; i<10; i++) {
 
-		defaultSelection.add(i+"");
+		defaultSelection.add(i+".jpg");
 
 		}
 		_selectedImages =defaultSelection;

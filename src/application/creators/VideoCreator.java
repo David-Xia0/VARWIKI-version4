@@ -43,7 +43,7 @@ public class VideoCreator extends Task<Void> {
 		_selectedImages = new ArrayList<String>();
 		List<String> selectedImages = videoData.getSelectedImages();
 		for (String image : selectedImages) {
-			_selectedImages.add(image.substring(0, image.lastIndexOf(".")));
+			_selectedImages.add(image);
 		}
 		resourceLocation = "/temp";
 		outputLocation = "./resources/VideoCreations/" + name + ".mp4";
@@ -59,7 +59,7 @@ public class VideoCreator extends Task<Void> {
 		_selectedImages = new ArrayList<String>();
 		List<String> selectedImages = videoData.getSelectedImages();
 		for (String image : selectedImages) {
-			_selectedImages.add(image.substring(0, image.lastIndexOf(".")));
+			_selectedImages.add(image);
 		}
 		resourceLocation = "/temp";
 		outputLocation = "./resources/VideoCreations/" + name + ".mp4";
@@ -74,7 +74,7 @@ public class VideoCreator extends Task<Void> {
 		_selectedImages = new ArrayList<String>();
 		List<String> selectedImages = videoData.getSelectedImages();
 		for (String image : selectedImages) {
-			_selectedImages.add(image.substring(0, image.lastIndexOf(".")));
+			_selectedImages.add(image.substring(0, image.lastIndexOf(".jpg")));
 		}
 		resourceLocation = "/temp";
 		outputLocation = "./resources/VideoCreations/" + name + ".mp4";
@@ -113,7 +113,7 @@ public class VideoCreator extends Task<Void> {
 		String lastImage = "";
 		for (String name : images) {
 			System.out.println(name);
-			text = text + "file 'images/" + name + ".jpg'\nduration " + stringDuration + "\n";
+			text = text + "file 'images/" + name + "'\nduration " + stringDuration + "\n";
 			lastImage = name;
 		}
 		text = text + "file '" + lastImage + "'";

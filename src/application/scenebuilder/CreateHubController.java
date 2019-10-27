@@ -190,7 +190,6 @@ public class CreateHubController implements Initializable{
 	 */
 	public void createVideo() {
 		VideoCreator creator = new VideoCreator(this);
-
 		_team.submit(creator);
 		creator.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 

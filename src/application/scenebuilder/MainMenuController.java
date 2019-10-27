@@ -153,6 +153,7 @@ public class MainMenuController implements Initializable{
 	@FXML
 	void handleCreate() {
 		_playerBox.pause();
+		Main.initiateFileSystem();
 		exit(SceneType.Search);
 	}
 
