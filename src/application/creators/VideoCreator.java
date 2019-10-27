@@ -91,7 +91,7 @@ public class VideoCreator extends Task<Void> {
 		_files = videoData.getOrder();
 		_selectedImages = videoData.getSelectedImages();
 		resourceLocation = "/templates/" + name;
-		outputLocation = "./resources/temp/matchingVideo.mp4";
+		outputLocation = "./resources/videoCreations/" + name + ".mp4";
 
 	}
 	*/
@@ -123,16 +123,6 @@ public class VideoCreator extends Task<Void> {
 		_team.submit(createFile);
 	}
 
-	/*private void markImages(List<String> images) {
-		for (String path : images) {
-			System.out.println(path);
-			RunBash mark = new RunBash(
-					"ffmpeg -i ./resources" + resourceLocation + "/images/" + path + ".jpg -vf \"drawtext=text='" + term
-							+ "':fontcolor=white:fontsize=75:x=(w-text_w)/2: y=(h-text_h-line_h)/2:\" ./resources/temp/"
-							+ path + ".jpg");
-			_team.submit(mark);
-		}
-	}*/
 
 	@Override
 	protected Void call() throws Exception {

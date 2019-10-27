@@ -27,13 +27,14 @@ public class ModifyImagesController implements Initializable{
 
 	@FXML
 	private Button _resetButton;
-
+	private boolean _setup=false;
 
 	private ExecutorService _team = Executors.newSingleThreadExecutor(); 
 	private List<String> _images = new ArrayList<String>();
 	private ObservableList<ImageElement> _imageList;
 	private Scene _parent;
-	private boolean createFinished = false;
+	private TemplateData _data;
+
 
 
 	/**
@@ -43,6 +44,8 @@ public class ModifyImagesController implements Initializable{
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		RunBash bash = new RunBash("ls ./resources/temp/images | cut -f1 -d'.'");
 		bash.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+
+			
 
 			@Override
 			public void handle(WorkerStateEvent event) {
@@ -65,8 +68,11 @@ public class ModifyImagesController implements Initializable{
 					_mainPane.add(displayImage, i%3, i/3);
 					i++;	
 				}
-				
-				createFinished=true;
+				while(!_setup) {
+					int ii=0;
+				}
+				setSelectedImages(_data.getSelectedImages());
+
 			}
 
 			});
@@ -75,8 +81,10 @@ public class ModifyImagesController implements Initializable{
 	}
 
 
-	public void setup(Scene parent) {
+	public void setup(Scene parent, TemplateData data) {
 		_parent=parent;
+		_data = data;
+		_setup=true;
 	}
 
 	@FXML
@@ -125,6 +133,7 @@ public class ModifyImagesController implements Initializable{
 		System.out.println(SelectedImages);
 
 		selectNone();
+		System.out.println("itsnull: "+SelectedImages ==null);
 		for(String i : SelectedImages) {
 			_imageList.get(Integer.parseInt(i)-1).setSelected(true);
 		}

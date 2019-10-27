@@ -189,8 +189,12 @@ public class CreateHubController implements Initializable{
 	 * THis method contains most/all of the bash and ffmpeg commands used in video creation
 	 */
 	public void createVideo() {
+<<<<<<< HEAD
+		VideoCreator creator = new VideoCreator(_data);
+=======
 		System.out.println("hellooo");
 		VideoCreator creator = new VideoCreator(this);
+>>>>>>> e92bdfba7eae963f18f5cd5d108d12272abe47cc
 		_team.submit(creator);
 		creator.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
@@ -218,10 +222,14 @@ public class CreateHubController implements Initializable{
 
 		}*/
 		template.mkdir();
+<<<<<<< HEAD
+
+=======
 		_team.submit(new RunBash("rm -r ./resources/templates/"+_videoName.getText()));
+>>>>>>> e92bdfba7eae963f18f5cd5d108d12272abe47cc
 		_team.submit(new RunBash("cp -rf ./resources/temp/images "+ path));
 		_team.submit(new RunBash("cp -rf ./resources/temp/audio "+ path));
-
+	
 		FileOutputStream fos;
 		try {
 			File file = new File(Main.getPathToResources() + "/templates/"+_videoName.getText() + "/info.class");
@@ -229,8 +237,10 @@ public class CreateHubController implements Initializable{
 			fos = new FileOutputStream(Main.getPathToResources() + "/templates/"+_videoName.getText() + "/info.class");
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			TemplateData data = new TemplateData(this);
+		
 			oos.writeObject(data);
 			oos.close();
+		
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -281,8 +291,7 @@ public class CreateHubController implements Initializable{
 		_defaultImages=false;
 		if(_imageControl ==null) {
 			_imageControl = (ModifyImagesController)Main.changeScene(SceneType.newImages, this);
-			_imageControl.setup(_videoName.getScene());
-			_imageControl.setSelectedImages(_data.getSelectedImages());
+			_imageControl.setup(_videoName.getScene(),_data);
 		}else {
 			_imageControl.setMe();
 		}
