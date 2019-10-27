@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import application.Main;
 import application.RunBash;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,15 +16,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
-/**
- * manages scene where user selects images to include in creation
- * @author student
- *
- */
-public class SetImagesController implements Initializable{
+public class ModifyImagesController implements Initializable{
 
 	@FXML
 	private GridPane _mainPane;
@@ -35,7 +32,7 @@ public class SetImagesController implements Initializable{
 	private ExecutorService _team = Executors.newSingleThreadExecutor(); 
 	private List<String> _images = new ArrayList<String>();
 	private ObservableList<ImageElement> _imageList;
-	private CreateMenuController _parent;
+	private Scene _parent;
 
 
 	/**
@@ -73,8 +70,7 @@ public class SetImagesController implements Initializable{
 	}
 
 
-
-	public void construct(CreateMenuController parent) {
+	public void setup(Scene parent) {
 		_parent=parent;
 	}
 
@@ -89,7 +85,7 @@ public class SetImagesController implements Initializable{
 	}
 
 	/**
-	 * Helper for selection buttons, checks if a image is selected or note and reverses the selection
+	 * Helper for selection buttons, checks if a image is selected or not and reverses the selection
 	 * @param all
 	 */
 	public void selectAllNone(boolean all) {
@@ -114,7 +110,7 @@ public class SetImagesController implements Initializable{
 	 */
 	@FXML
 	public void handleDone(ActionEvent event) {
-		_parent.popdownSetImages();
+		Main.getMainStage().setScene(_parent);
 	}
 
 	public void setSelectedImages(List<String> SelectedImages) {
@@ -127,24 +123,28 @@ public class SetImagesController implements Initializable{
 		for(String i : SelectedImages) {
 			_imageList.get(Integer.parseInt(i)-1).setSelected(true);
 		}
-		
+
 	}
 
 	/**
 	 * returns list of selected images
 	 * @return
 	 */
-	public List<ImageElement> getSelectedImages(){
-		List<ImageElement> selected = new ArrayList<ImageElement>();
+	public List<String> getSelectedImages(){
+		List<String> selected = new ArrayList<String>();
 
 		for(ImageElement i:_imageList) {
 			if(i.isSelected()) {
-				selected.add(i);
+				selected.add(i.toString());
 			}
 		}
 		return selected;
 	}
 
 
-
+	public void setMe() {
+		Main.getMainStage().setScene(_mainPane.getScene());
+		
+	}
 }
+

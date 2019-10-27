@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 import application.AudioBar;
 import application.RunBash;
 import application.scenebuilder.CreateMenuController;
+import application.scenebuilder.TemplateData;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -30,12 +31,19 @@ public class AudioCreator extends Task<Boolean>{
 		_audioChunksCount = data.getAudioText().size();
 		_voicePackage = data.getVoicePackage();
 	}
+	
+	public AudioCreator(String text, String voicePackage, int current) {
+		_text = text;
+		_voicePackage = voicePackage;
+		_audioChunksCount = current;
+	}
 
 	@Override
 	protected Boolean call() throws Exception {
 		return createAudio();
 	}
 
+	
 	public boolean createAudio() {
 
 		_team.submit(new RunBash("mkdir ./resources/temp/tmpaudio"));
@@ -64,7 +72,7 @@ public class AudioCreator extends Task<Boolean>{
 
 			@Override
 			public void handle(WorkerStateEvent arg0) {
-				
+				System.out.println("audioGenerated");
 				if(_cancelOperation) {
 					return;
 				}
@@ -100,8 +108,11 @@ public class AudioCreator extends Task<Boolean>{
 			}
 		});
 		
+		System.out.println("numcmds: "+  commandList.size());
+		
 		for(int i =0; i<commandList.size(); i++) {
 			_team.submit(commandList.get(i));
+			System.out.println("command: " + i);
 		}
 		
 		while(!_createFinished) {

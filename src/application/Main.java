@@ -34,7 +34,13 @@ public class Main extends Application {
 		CreateMenu("CreateMenu.fxml"),
 		Search("Search.fxml"),
 		QuizMenu("QuizMenu.fxml"),
-		Loader("Loading.fxml");
+		Loader("Loading.fxml"),
+		Audio("ModifyAudio.fxml"),
+		Images("SetImages.fxml"),
+		newImages("ModifyImages.fxml"),
+		newAudio("AddAudio.fxml"),
+		createHub("CreateHub.fxml");
+		
 		private String fileName;
 		private SceneType(String name) {
 			fileName = name;
@@ -52,7 +58,8 @@ public class Main extends Application {
 		loaderStage.initStyle(StageStyle.TRANSPARENT);
 		changeScene(SceneType.Loader, this, loaderStage);
 		loaderStage.show();
-		primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/resources/facebook.png")));
+		loaderStage.getIcons().add(new Image(Main.class.getResourceAsStream("/resources/icon.png")));
+		primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/resources/icon.png")));
 		PauseTransition pause = new PauseTransition(Duration.seconds(3));
 		pause.setOnFinished(event -> {
 				_stage=primaryStage;
@@ -70,30 +77,6 @@ public class Main extends Application {
 		        loaderStage.close();
 		});
 		pause.play();
-/*
-		Platform.runLater(new Runnable(){
-			public void run() {
-				changeScene(SceneType.MainMenu,this);
-				//Sets the whole program to close when application window is closed
-
-	
-				try {
-					Thread.sleep(3000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				//loaderStage.close();
-				_stage.show();
-			}	
-		});
-		*/
-
-		//Initiate the first Scene
-
-
-
-
 	}
 
 	public static void main(String[] args) {
@@ -132,6 +115,7 @@ public class Main extends Application {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println("yep");
 		return null;
 	}
 
@@ -168,6 +152,10 @@ public class Main extends Application {
 		alert.setHeaderText("ERROR");
 		alert.setContentText(msg);
 		alert.showAndWait();
+	}
+	
+	public static Stage getMainStage() {
+		return _stage;
 	}
 
 }

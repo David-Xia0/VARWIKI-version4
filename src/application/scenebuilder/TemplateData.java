@@ -3,6 +3,13 @@ package application.scenebuilder;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import application.AudioBar;
+import application.RunBash;
 
 /**
  * This class is used to store Creation information. So this information can be accessed later for modification etc.
@@ -20,6 +27,7 @@ public class TemplateData implements Serializable {
 	private final List<String> audioText;
 	private final List<String> _files;
 	private final List<String> _selectedImages;
+	private boolean _isTemplate;
 	
 	/**
 	 * all information about creation is obatined from the create menu controller scene
@@ -30,6 +38,7 @@ public class TemplateData implements Serializable {
 		name = template.getName();
 		term = template.getTerm();
 		BGM = template.getBGM();
+		_isTemplate = true;
 		usingImages = template.usingImages();
 		audioText = template.getAudioText();
 		_files = template.fileOrder();
@@ -38,6 +47,41 @@ public class TemplateData implements Serializable {
 		for(String image: selectedImages) {
 			_selectedImages.add(image.substring(0, image.lastIndexOf(".")));
 		}
+	}
+	
+	/**
+	 * all information about creation is obatined from the create hub controller scene
+	 * @param template
+	 */
+	public TemplateData(CreateHubController template) {
+		text = template.getBoxText();
+		name = template.getName();
+		term = template.getTerm();
+		BGM = template.getBGM();
+		_isTemplate = true;
+		usingImages = template.usingImages();
+		audioText = template.getAudioText();
+		_files = template.fileOrder();
+		_selectedImages = new ArrayList<String>();
+		List<String> selectedImages = template.getSelectedImages();
+		for(String image: selectedImages) {
+			_selectedImages.add(image.substring(0, image.lastIndexOf(".")));
+		}
+	}
+	
+	public TemplateData(String term, String text) {
+		BGM = "No Music";
+		this.term=term;
+		this.text = text;
+		_isTemplate = false;
+		_files = null;
+		List<String> defaultSelection = new ArrayList<String>();
+		for(int i =0; i<10; i++) {
+		defaultSelection.add(i+"");
+		}
+		_selectedImages =defaultSelection;
+		name = term;
+		audioText = null;
 	}
 	
 	/*
@@ -81,6 +125,17 @@ public class TemplateData implements Serializable {
 	
 	public boolean usingImages() {
 		return usingImages;
+	}
+	
+	public boolean isTemplate() {
+		return _isTemplate;
+	}
+
+	public Future<?> load() {
+		String path = "./resources/templates/" + name;
+		ExecutorService team = Executors.newSingleThreadExecutor(); 
+		team.submit(new RunBash("cp -rf " + path +"/images ./resources/temp"));
+		return team.submit(new RunBash("cp -rf " + path +"/audio ./resources/temp"));
 	}
 	
 }

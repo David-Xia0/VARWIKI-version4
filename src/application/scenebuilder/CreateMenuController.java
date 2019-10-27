@@ -65,7 +65,7 @@ public class CreateMenuController implements Initializable{
 
 	private ObservableList<HBox> _audioList = FXCollections.observableArrayList();
 	private ExecutorService _team = Executors.newSingleThreadExecutor(); 
-	private boolean _runningThread;
+	private boolean _runningThread=false;
 	private int audioCount=0;
 	private SetImagesController _controller;
 	private String __videoName;
@@ -442,7 +442,7 @@ public class CreateMenuController implements Initializable{
 	 */
 	@FXML
 	void handleTestAudio(ActionEvent event) {
-
+		_selectedText  = _displayTextArea.getSelectedText();
 		if(_selectedText.isEmpty() || _runningThread) {
 			return;
 		}
@@ -601,9 +601,6 @@ public class CreateMenuController implements Initializable{
 	public void setup(TemplateData data) {
 		String term = data.getTerm();
 		String text = data.getText();
-
-		//this is currently kinda glitchy (ie it doesnt work)
-
 		String path = "./resources/templates/" + data.getName();
 		_videoName.setText(data.getName());
 		_team.submit(new RunBash("cp -rf " + path +"/images ./resources/temp"));
@@ -620,15 +617,6 @@ public class CreateMenuController implements Initializable{
 			audioCount++;
 		}
 		_audioBox.setItems(_audioList);
-		/*
-		File folder = new File("./resources/temp/audio");
-		for(int i=0; i<folder.listFiles().length; i++) {
-			System.out.println(audioCount);
-			new AudioBar(data.getText(audioCount),""+i,_audioList);
-			_audioBox.setItems(_audioList);
-			audioCount++;
-		}
-		 */
 		_imageSelection.setSelected(data.usingImages());
 		setup(text,term,data);
 		if(data.getBGM() != null) {

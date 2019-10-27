@@ -58,8 +58,9 @@ public class RunBash extends Task<List<String>>{
 			while ((line = stdOut.readLine()) != null) {
 				_stdOut.add(line);
 			}
-			System.out.println(_stdOut);
-			System.out.println(_stdError);
+			System.out.println("bash command:" + _command);
+			System.out.println("bash output: " + _stdOut);
+			System.out.println("bash error: " + _stdError);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
