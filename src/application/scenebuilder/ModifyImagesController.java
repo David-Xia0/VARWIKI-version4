@@ -20,6 +20,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
+/**
+ * images can be seelcted and deselected here.
+ * These images are used for the slideshow in the final video
+ * @author student
+ *
+ */
 public class ModifyImagesController implements Initializable{
 
 	@FXML
@@ -81,6 +87,11 @@ public class ModifyImagesController implements Initializable{
 	}
 
 
+	/**
+	 * initializes the seelction screen
+	 * @param parent
+	 * @param data
+	 */
 	public void setup(Scene parent, TemplateData data) {
 		_parent=parent;
 		_data = data;
@@ -118,7 +129,7 @@ public class ModifyImagesController implements Initializable{
 	}
 
 	/**
-	 * Hides the window
+	 * Hides the window and returns to previous scene
 	 * @param event
 	 */
 	@FXML
@@ -156,6 +167,9 @@ public class ModifyImagesController implements Initializable{
 	}
 
 
+	/**
+	 * sets this as the current scene
+	 */
 	public void setMe() {
 		Main.getMainStage().setScene(_mainPane.getScene());
 		

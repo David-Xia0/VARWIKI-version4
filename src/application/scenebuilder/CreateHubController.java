@@ -93,6 +93,7 @@ public class CreateHubController implements Initializable{
 			Main.error("No Name set");
 			return;
 		}
+		
 		List<String> audioList;
 		if(_audioControl!=null){
 			audioList = _audioControl.getAudioText();

@@ -8,6 +8,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-image: url(&quot;resources/background.jpg&quot;);" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.scenebuilder.QuizMenuController">
    <children>
+      <HBox fx:id="_resultBackground" layoutX="14.0" layoutY="473.0" prefHeight="100.0" prefWidth="489.0" style="-fx-background-color: white;" visible="false" />
       <Button fx:id="_backButton" layoutX="729.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleReturn" style="-fx-background-color: f10101;" text="back" />
       <HBox fx:id="_hbox" layoutX="62.0" layoutY="133.0" prefHeight="355.0" prefWidth="423.0" />
       <Text fill="#106b05" layoutX="47.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Guess the Topic">

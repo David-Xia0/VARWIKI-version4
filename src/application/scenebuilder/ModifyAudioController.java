@@ -16,6 +16,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 
+/**
+ * this scene is used to handle already created audio files.
+ * The user can play or delete and also move the position of audio file
+ * @author student
+ *
+ */
 public class ModifyAudioController {
 
 	@FXML
@@ -26,6 +32,11 @@ public class ModifyAudioController {
 	private Scene _parent;
 	private NewAudioController _newAudioScene;
 
+	/**
+	 * finds presetn audio files and loads them into a list view to display
+	 * @param parent
+	 * @param data
+	 */
 	public void setup(Scene parent, TemplateData data) {
 		// TODO Auto-generated method stub
 		
@@ -41,6 +52,10 @@ public class ModifyAudioController {
 		_audioBox.setItems(_audioList);
 	}
 
+	/**
+	 * gets selected text from previous creation screen
+	 * @return
+	 */
 	public String getText() {
 		if(_newAudioScene!=null) {
 			return _newAudioScene.getText();
@@ -50,6 +65,9 @@ public class ModifyAudioController {
 	
 	
 
+	/**
+	 * switches to audio creation screen
+	 */
 	@FXML
 	void handleNewAudio(){
 		if(_newAudioScene == null) {
@@ -60,8 +78,7 @@ public class ModifyAudioController {
 		}
 	}
 	
-	/*
-	 * 
+	/* 
 	 * The following five methods are used to edit play existing audio chunks
 	 */
 	private boolean checkAudioBar() {
@@ -70,7 +87,6 @@ public class ModifyAudioController {
 		}
 		return true;
 	}
-
 
 	@FXML
 	void handlePlayAudio(ActionEvent event) {
@@ -113,10 +129,11 @@ public class ModifyAudioController {
 		Main.getMainStage().setScene(_parent);
 	}
 
-
-
-
-
+	/**
+	 * adds a audio files to the list view
+	 * @param selectedText
+	 * @param success
+	 */
 	public void addBar(String selectedText,boolean success) {
 			if(success) {
 				new AudioBar(selectedText,audioCount+"",_audioList);
@@ -125,6 +142,10 @@ public class ModifyAudioController {
 			}
 	}
 
+	/**
+	 * gets all audio text from already saved audio files
+	 * @return
+	 */
 	public List<String> getAudioText() {
 		List<String> audioText = new ArrayList<String>();
 		for(Node node : _audioList) {
@@ -132,10 +153,18 @@ public class ModifyAudioController {
 		}
 		return audioText;
 	}
+	
+	/**
+	 * returns all audio files displayed in the list view
+	 * @return
+	 */
 	public ObservableList<HBox> getAudioList(){
 		return _audioList;
 	}
 
+	/**
+	 * sets current scene as viewable
+	 */
 	public void setMe() {
 		Main.getMainStage().setScene(_audioBox.getScene());
 	}

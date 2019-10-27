@@ -29,25 +29,6 @@ public class TemplateData implements Serializable {
 	private final List<String> _selectedImages;
 	private boolean _isTemplate;
 	
-	/**
-	 * all information about creation is obatined from the create menu controller scene
-	 * @param template
-	 */
-	public TemplateData(CreateMenuController template) {
-		text = template.getText();
-		name = template.getName();
-		term = template.getTerm();
-		BGM = template.getBGM();
-		_isTemplate = true;
-		usingImages = template.usingImages();
-		audioText = template.getAudioText();
-		_files = template.fileOrder();
-		_selectedImages = new ArrayList<String>();
-		List<String> selectedImages = template.getSelectedImages();
-		for(String image: selectedImages) {
-			_selectedImages.add(image.substring(0, image.lastIndexOf(".jpg")));
-		}
-	}
 	
 	/**
 	 * all information about creation is obatined from the create hub controller scene

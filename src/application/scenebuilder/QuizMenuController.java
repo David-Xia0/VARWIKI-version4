@@ -17,16 +17,11 @@ import java.util.concurrent.Executors;
 import application.Main;
 import application.RunBash;
 import application.Main.SceneType;
-import application.creators.VideoCreator;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
 import javafx.scene.paint.Paint;
@@ -74,7 +69,7 @@ public class QuizMenuController {
 	private Text _resultText;
 	
 	@FXML
-	private HBox _answerBackground;
+	private HBox _resultBackground;
 
 	@FXML 
 	private Text _score;
@@ -82,18 +77,30 @@ public class QuizMenuController {
 	private int _correct=0;
 
 
+	/**
+	 * set the counting score board values
+	 */
 	public void setScore(String score,int correct,int total) {
 		_score.setText(score);
 		_total = total;
 		_correct = correct;
 	}
 
+	/**
+	 * reloads quiz menu and gives the user another quesiton to answer
+	 * @param event
+	 */
 	@FXML
 	void handleNextQuestion(ActionEvent event) {
 		QuizMenuController controller = (QuizMenuController)exit(SceneType.QuizMenu);
 		controller.setScore(_score.getText(),_correct,_total);
 	}
 
+	/**
+	 * After the user presses one of the four buttons, this method is called
+	 * The button is checked to see if it is the correct one
+	 * @param event
+	 */
 	@FXML
 	void handleCheckAnswer(ActionEvent event) {
 		if(_threadRunning || _answered) {
@@ -107,14 +114,14 @@ public class QuizMenuController {
 			FileInputStream fileIn = new FileInputStream(data);
 			ObjectInputStream object = new ObjectInputStream(fileIn);
 			TemplateData template = (TemplateData) object.readObject();
+			_resultBackground.setVisible(true);
 			if(template.getTerm().contentEquals(answer)) {
 				_resultText.setText("Nice! You got it Correct!");
-				_resultText.setFill(Paint.valueOf("#09000d"));
+				_resultText.setFill(Paint.valueOf("#09ff0d"));
 				_resultText.setVisible(true);
 				_correct++;
 			}else {
 				_resultText.setText("Sorry! Correct Answer Was "+_creations.get((int)randomCreation));
-				System.out.println(_creations.get((int)randomCreation));
 				_resultText.setFill(Paint.valueOf("#d70606"));
 				_resultText.setVisible(true);
 			}
@@ -129,6 +136,8 @@ public class QuizMenuController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		//Set indicators to tell the app the user has answered the question
 		_resultText.setVisible(true);
 		_answered=true;
 		_nextQuestionButton.setVisible(true);
@@ -136,6 +145,10 @@ public class QuizMenuController {
 	}
 
 
+	/**
+	 * Returns to the main menu screen
+	 * @param event
+	 */
 	@FXML
 	void handleReturn(ActionEvent event) {
 		if(!_threadRunning) {
@@ -143,23 +156,30 @@ public class QuizMenuController {
 		}
 	}
 
+	
 	@FXML
 	void initialize() {
 		_answerButtons =  new ArrayList<>(Arrays.asList(_guess1Button, _guess2Button, _guess3Button, _guess4Button));
 
 
+		/*
+		 * finds all avaliable video creations
+		 */
 		RunBash bash = new RunBash("List=`ls ./resources/VideoCreations` ; List=${List//.???/} ; printf \"${List// /.\\\\n}\\n\"");
 		_team.submit(bash);
 		bash.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 			@Override
 			public void handle(WorkerStateEvent event) {
 
-
 				try {
 					_creations = bash.get();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				
+				/*
+				 * finds 4 random creations and sets one as the correct answer
+				 */
 				randomCreation = Math.random()*_creations.size();
 				for(int i=0;i<3;i++) {
 					_answerOptions.add(Math.random()*_creations.size());
@@ -167,10 +187,7 @@ public class QuizMenuController {
 				_answerOptions.add(randomCreation);
 
 
-				System.out.println(_answerOptions);
 				double position = Math.random()*(4);
-				System.out.println(position);
-
 				for(int i=0;i<4;i++) {
 					String data = Main.getPathToResources() + "/templates/" +  _creations.get(_answerOptions.get(i).intValue()) + "/info.class";
 					try {
@@ -190,15 +207,17 @@ public class QuizMenuController {
 
 
 
-				//This adds the videoPlayer to the scene
+				//This adds the videoPlayer to the scene and sets the video
 				_player = new MediaBox();
-
 				_hbox.getChildren().add(_player);	
 				setNewMedia();
 			}
 		});
 	}
-
+	
+	/**
+	 * method that sets the video for the correct answer
+	 */
 	private void setNewMedia() {
 		//setup(currentSelection);	
 		URL mediaUrl;
@@ -210,46 +229,6 @@ public class QuizMenuController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		/**
-		try {
-			FileInputStream fileIn = new FileInputStream(data);
-			ObjectInputStream object = new ObjectInputStream(fileIn);
-			TemplateData template = (TemplateData) object.readObject();
-			object.close();
-
-			VideoCreator video = new VideoCreator(template);
-			_team.submit(video);
-			video.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-
-				@Override
-				public void handle(WorkerStateEvent event) {
-					loadVideo();
-				}
-			});
-
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		 */
-
-	}
-
-	private void loadVideo() {
-		_player.pause();
-		URL mediaUrl;
-		try {
-			mediaUrl = new File(Main.getPathToResources() + "/temp/matchingVideo.mp4").toURI().toURL();
-			System.out.println(Main.getPathToResources());
-			Media newMedia = new Media(mediaUrl.toExternalForm());
-			_player.setMedia(newMedia);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	
 	}
 
 	private Object exit(SceneType location) {

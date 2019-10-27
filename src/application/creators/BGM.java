@@ -7,6 +7,12 @@ import application.RunBash;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 
+
+/**
+ * this calls merges video with background music
+ * @author student
+ *
+ */
 public class BGM {
 
 	private String _bgm;
@@ -18,9 +24,7 @@ public class BGM {
 	}
 	
 	/**
-	 * 
-	 * ffmpeg -i input.mp3 -ss 00:02:54.583 -t 300 -acodec copy output.mp3 truncates audio file
-	 * ffmpeg  -i david1.mp4 -i victor*.mp3 -filter_complex "amix=inputs=2" -map 0:0 -c:a aac -strict -2 -c:v copy output.mp4 
+	 * this method uses the mp3name field and merges it with the video mp4 file
 	 * @param file - takes in input of the video file name
 	 * @param length - takes in the length of the video
 	 */

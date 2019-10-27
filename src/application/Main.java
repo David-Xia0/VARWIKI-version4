@@ -5,12 +5,8 @@ import java.io.FileInputStream;
 import java.net.URISyntaxException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import application.scenebuilder.CreateMenuController;
-import application.scenebuilder.MainMenuController;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

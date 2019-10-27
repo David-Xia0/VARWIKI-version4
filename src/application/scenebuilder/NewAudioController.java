@@ -19,6 +19,13 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
 
+
+/**
+ * this class is used for new audio creation
+ * It turns highlighted text into speech
+ * @author student
+ *
+ */
 public class NewAudioController {
 
 	@FXML
@@ -30,8 +37,8 @@ public class NewAudioController {
 	@FXML
 	private ProgressIndicator _loading;
 
+	
 	private Scene _parent;
-
 	private boolean _playing=false;
 	private ExecutorService _team = Executors.newSingleThreadExecutor();
 	private int _numAudioFiles;
@@ -39,6 +46,13 @@ public class NewAudioController {
 
 
 
+	/**
+	 * sets the defaults
+	 * @param scene
+	 * @param data
+	 * @param current
+	 * @param parentController
+	 */
 	public void setup(Scene scene, TemplateData data, int current, ModifyAudioController parentController) {
 		// TODO Auto-generated method stub
 		ObservableList<String> voices = FXCollections.observableArrayList();
@@ -51,16 +65,25 @@ public class NewAudioController {
 		_parentController =  parentController;
 	}
 
+	/**
+	 * sets this as the current scene
+	 */
 	public void setMe() {
 		Main.getMainStage().setScene(_displayTextArea.getScene());
 	}
 
+	/**
+	 * returns to previous scene
+	 */
 	@FXML
 	void handleReturn() {
 		Main.getMainStage().setScene(_parent);
 	}
 
 
+	/**
+	 * calls the create audio class with the selected text
+	 */
 	@FXML
 	void handleSaveAudio() {
 		String selectedText=_displayTextArea.getSelectedText();
@@ -91,6 +114,11 @@ public class NewAudioController {
 		handleReturn();
 	}
 
+	/**
+	 * uses festival to test the selected audio
+	 * No files are create by this method
+	 * @param event
+	 */
 	@FXML
 	void handleTestAudio(ActionEvent event) {
 		String selectedText  = _displayTextArea.getSelectedText();
@@ -99,6 +127,8 @@ public class NewAudioController {
 		}
 
 		String voice = _festivalVoice.getSelectionModel().getSelectedItem();
+		
+		//if there is a voice package used, a differenet bash command needs to be called
 		if(voice == null ||voice.contentEquals("Default")) {
 			RunBash audioCreation = new RunBash("echo \"" + selectedText + "\" | festival --tts");
 			_team.submit(audioCreation);
@@ -127,6 +157,7 @@ public class NewAudioController {
 		}
 	}
 
+	//highlights all text and saves it, THis is a very time consuming function
 	@FXML
 	void saveAllAudio(ActionEvent event) {
 		_displayTextArea.selectAll();

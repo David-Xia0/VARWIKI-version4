@@ -15,7 +15,7 @@
             <Font name="Chilanka Regular" size="26.0" />
          </font>
       </Label>
-      <GridPane fx:id="_mainPane" gridLinesVisible="true" layoutX="30.0" layoutY="46.0" AnchorPane.bottomAnchor="64.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="46.0">
+      <GridPane fx:id="_mainPane" gridLinesVisible="true" layoutX="30.0" layoutY="46.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="64.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="46.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

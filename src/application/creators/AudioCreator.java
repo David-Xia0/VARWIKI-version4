@@ -7,7 +7,6 @@ import java.util.concurrent.Executors;
 
 import application.AudioBar;
 import application.RunBash;
-import application.scenebuilder.CreateMenuController;
 import application.scenebuilder.TemplateData;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -15,6 +14,11 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
+/**
+ * this class is used to create audio files selcted by the user
+ * @author student
+ *
+ */
 public class AudioCreator extends Task<Boolean>{
 
 	private static final int MAXLENGTH =20;
@@ -26,11 +30,6 @@ public class AudioCreator extends Task<Boolean>{
 	private boolean _createFinished=false;
 	private int _audioCatCount;
 
-	public AudioCreator(CreateMenuController data) {
-		_text = data.getSelectedText();
-		_audioChunksCount = data.getAudioText().size();
-		_voicePackage = data.getVoicePackage();
-	}
 	
 	public AudioCreator(String text, String voicePackage, int current) {
 		_text = text;
@@ -38,14 +37,20 @@ public class AudioCreator extends Task<Boolean>{
 		_audioChunksCount = current;
 	}
 
+	/**
+	 * call method should return true if the audio files are succesffully created
+	 */
 	@Override
 	protected Boolean call() throws Exception {
 		return createAudio();
 	}
 
-	
+	/**
+	 * This breaks down highlighted text into smaller chunks and calls save audio on them (this is the function that makes audio)
+	 * Chunks need to be broken down to preserve audio quallity whne doing tts 
+	 * @return
+	 */
 	public boolean createAudio() {
-
 		_team.submit(new RunBash("mkdir ./resources/temp/tmpaudio"));
 		
 		String[] wordCount = _text.split("\\s+");
@@ -54,6 +59,9 @@ public class AudioCreator extends Task<Boolean>{
 		List<RunBash>commandList = new ArrayList<RunBash>();
 		List<String>audioList = new ArrayList<String>();
 
+		/*
+		 * determines suitable length for audio chunks
+		 */
 		for(int i = 0; i<wordCount.length/MAXLENGTH + 1; i++) {
 			String audio = "";
 			for (int j=0; j<MAXLENGTH; j++) {
@@ -78,6 +86,8 @@ public class AudioCreator extends Task<Boolean>{
 					return;
 				}
 				
+			
+				//if there is a problema nd the audio cannot be converted this error will be displayed
 				if(lastCommand.returnError() != null &&lastCommand.returnError().substring(0, 10).contentEquals("SIOD ERROR")) {
 					error("some words selected cannot be converted by selected voice package");
 					_cancelOperation =true;
@@ -90,9 +100,8 @@ public class AudioCreator extends Task<Boolean>{
 				for(int i =0; i<audioList.size(); i++) {
 					audioFileNames = audioFileNames+ "./resources/temp/tmpaudio/" + i +".wav ";	
 				}	
-				//System.out.println(audioFileNames);
-				//System.out.println(_audioChunksCount);
-				
+
+				//all audio chunks are merged to create one audio file
 				RunBash mergeAudio = new RunBash("sox "+ audioFileNames + "./resources/temp/audio/" + _audioChunksCount + ".wav");
 				_team.submit(mergeAudio);	
 				mergeAudio.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
@@ -105,17 +114,15 @@ public class AudioCreator extends Task<Boolean>{
 				});
 				
 				_team.submit(new RunBash("rm -rf ./resources/temp/tmpaudio"));
-				
 			}
 		});
 		
-		//system.out.println("numcmds: "+  commandList.size());
-		
+		//all audio chunks are queued for creation
 		for(int i =0; i<commandList.size(); i++) {
 			_team.submit(commandList.get(i));
-			//system.out.println("command: " + i);
 		}
 		
+		//method only completes when all creations are finished
 		while(!_createFinished) {
 			if(_team.isTerminated()) {
 				_createFinished=true;
@@ -127,12 +134,13 @@ public class AudioCreator extends Task<Boolean>{
 
 
 
+	/**
+	 * this method calls the bash commands on the selected Text
+	 * @param selectedText
+	 * @return
+	 */
 	private RunBash saveAudio(String selectedText){
 		RunBash audioCreation;
-		//System.out.println(selectedText);
-		//System.out.println(_voicePackage);
-		
-
 		if( _voicePackage ==null || _voicePackage.contentEquals("Default") ) {
 			audioCreation = new RunBash("echo \"" + selectedText + "\" | text2wave -o ./resources/temp/tmpaudio/"+ _audioCatCount + ".wav");
 		}else {
