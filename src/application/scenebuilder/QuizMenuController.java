@@ -24,6 +24,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
@@ -75,12 +76,22 @@ public class QuizMenuController {
 	@FXML
 	private HBox _answerBackground;
 
+	@FXML 
+	private Text _score;
+	private int _total=0;
+	private int _correct=0;
 
 
+	public void setScore(String score,int correct,int total) {
+		_score.setText(score);
+		_total = total;
+		_correct = correct;
+	}
 
 	@FXML
 	void handleNextQuestion(ActionEvent event) {
-		exit(SceneType.QuizMenu);
+		QuizMenuController controller = (QuizMenuController)exit(SceneType.QuizMenu);
+		controller.setScore(_score.getText(),_correct,_total);
 	}
 
 	@FXML
@@ -88,7 +99,7 @@ public class QuizMenuController {
 		if(_threadRunning || _answered) {
 			return;
 		}
-
+		_total++;
 		String answer = ((Button)event.getSource()).getText();
 
 		String data = Main.getPathToResources() + "/templates/" +  _creations.get((int)randomCreation) + "/info.class";
@@ -98,10 +109,12 @@ public class QuizMenuController {
 			TemplateData template = (TemplateData) object.readObject();
 			if(template.getTerm().contentEquals(answer)) {
 				_resultText.setText("Nice! You got it Correct!");
-				_resultText.setFill(Paint.valueOf("#30d01b"));
+				_resultText.setFill(Paint.valueOf("#09000d"));
 				_resultText.setVisible(true);
+				_correct++;
 			}else {
 				_resultText.setText("Sorry! Correct Answer Was "+_creations.get((int)randomCreation));
+				System.out.println(_creations.get((int)randomCreation));
 				_resultText.setFill(Paint.valueOf("#d70606"));
 				_resultText.setVisible(true);
 			}
@@ -116,9 +129,10 @@ public class QuizMenuController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		_answerBackground.setVisible(true);
+		_resultText.setVisible(true);
 		_answered=true;
 		_nextQuestionButton.setVisible(true);
+		_score.setText(_correct + "/" + _total);
 	}
 
 

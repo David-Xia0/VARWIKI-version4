@@ -67,12 +67,13 @@ public class AudioCreator extends Task<Boolean>{
 			commandList.add(saveAudio(audio));
 		} 
 		
+		
+		
 		RunBash lastCommand = commandList.get(commandList.size()-1);
 		lastCommand.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
 			@Override
 			public void handle(WorkerStateEvent arg0) {
-				System.out.println("audioGenerated");
 				if(_cancelOperation) {
 					return;
 				}
@@ -89,8 +90,8 @@ public class AudioCreator extends Task<Boolean>{
 				for(int i =0; i<audioList.size(); i++) {
 					audioFileNames = audioFileNames+ "./resources/temp/tmpaudio/" + i +".wav ";	
 				}	
-				System.out.println(audioFileNames);
-				System.out.println(_audioChunksCount);
+				//System.out.println(audioFileNames);
+				//System.out.println(_audioChunksCount);
 				
 				RunBash mergeAudio = new RunBash("sox "+ audioFileNames + "./resources/temp/audio/" + _audioChunksCount + ".wav");
 				_team.submit(mergeAudio);	
@@ -108,11 +109,11 @@ public class AudioCreator extends Task<Boolean>{
 			}
 		});
 		
-		System.out.println("numcmds: "+  commandList.size());
+		//system.out.println("numcmds: "+  commandList.size());
 		
 		for(int i =0; i<commandList.size(); i++) {
 			_team.submit(commandList.get(i));
-			System.out.println("command: " + i);
+			//system.out.println("command: " + i);
 		}
 		
 		while(!_createFinished) {
@@ -128,8 +129,8 @@ public class AudioCreator extends Task<Boolean>{
 
 	private RunBash saveAudio(String selectedText){
 		RunBash audioCreation;
-		System.out.println(selectedText);
-		System.out.println(_voicePackage);
+		//System.out.println(selectedText);
+		//System.out.println(_voicePackage);
 		
 
 		if( _voicePackage ==null || _voicePackage.contentEquals("Default") ) {

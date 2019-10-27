@@ -70,13 +70,14 @@ public class CreateHubController implements Initializable{
 	private String __videoName;
 	@FXML
 	private ChoiceBox<String> _musicChoiceBox;
+	private boolean  _newAudioList=false;
 
 	/**
 	 * this initialises choice box to allow for the selection of different festival voices
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		
+
 
 		ObservableList<String> music = FXCollections.observableArrayList();
 		music.addAll("No Music","victor_-_Calling_on_Dolphins.mp3");
@@ -88,13 +89,6 @@ public class CreateHubController implements Initializable{
 
 	@FXML
 	void handleCreate(ActionEvent event) {
-		if(_defaultImages && _imageSelection.isSelected()) {
-			boolean confirm  = defaultImages();
-			if(!confirm) {
-				return;
-			}
-		}
-
 		if(_videoName.getText().isBlank()) {
 			Main.error("No Name set");
 			return;
@@ -105,18 +99,19 @@ public class CreateHubController implements Initializable{
 		}else {
 			audioList = _data.getAudioText();
 		}
+
 		if(audioList==null||audioList.isEmpty()) {
-			boolean confirmed = noText();
-			if (!confirmed){
+			Main.error("Please add some audio");
+			return;
+		}
+
+		if(_defaultImages && _imageSelection.isSelected()) {
+			boolean confirm  = defaultImages();
+			if(!confirm) {
 				return;
 			}
-			_doneSaving = false;
-			handleSaveAudio(getBoxText());
-		
-			while(_doneSaving==false) {
-			int i =1;
-			}
 		}
+		
 		if (_data.isTemplate()) {
 
 			if (!_data.getName().contentEquals(_videoName.getText())) {
@@ -132,7 +127,7 @@ public class CreateHubController implements Initializable{
 
 					Alert alert2 = new Alert(AlertType.CONFIRMATION);
 					alert.setTitle("Save changes?");
-					alert.setHeaderText("This will overwrite your current Creation");
+					alert.setHeaderText("This will overwrite any current Creation with this name");
 					alert.setContentText("Do you want to save your changes?");
 					Optional<ButtonType> result2 = alert2.showAndWait();
 					if(result2.get() != ButtonType.OK) {
@@ -159,21 +154,11 @@ public class CreateHubController implements Initializable{
 				@Override
 				public void handle(WorkerStateEvent arg0) {
 					if(f.getExitStatus()== 0 ) {
-						Alert alert = new Alert(AlertType.CONFIRMATION);
-						alert.setTitle("Save changes?");
-						alert.setHeaderText("This will overwrite your current Creation");
-						alert.setContentText("Do you want to save your changes?");
-						Optional<ButtonType> result = alert.showAndWait();
-						if(result.get() != ButtonType.OK) {
-							_loading.setVisible(false);
-							_createButton.setVisible(true);
-							return;
-						}else {
-							RunBash remove = new RunBash("rm ./resources/VideoCreations/"+__videoName+".mp4");
-							_team.submit(remove);
-							handleSaveTemplate();
-							createVideo();
-						}
+						RunBash remove = new RunBash("rm ./resources/VideoCreations/"+__videoName+".mp4");
+						_team.submit(remove);
+						handleSaveTemplate();
+						createVideo();
+
 					}else {
 						handleSaveTemplate();
 						createVideo();
@@ -201,7 +186,7 @@ public class CreateHubController implements Initializable{
 	}
 
 	private void handleSaveTemplate(){
-		
+
 		String path = "./resources/templates/" + _videoName.getText();
 		File template = new File(path);
 		/*if(template.exists()) {
@@ -221,7 +206,7 @@ public class CreateHubController implements Initializable{
 
 		_team.submit(new RunBash("cp -rf ./resources/temp/images "+ path));
 		_team.submit(new RunBash("cp -rf ./resources/temp/audio "+ path));
-	
+
 		FileOutputStream fos;
 		try {
 			File file = new File(Main.getPathToResources() + "/templates/"+_videoName.getText() + "/info.class");
@@ -229,10 +214,10 @@ public class CreateHubController implements Initializable{
 			fos = new FileOutputStream(Main.getPathToResources() + "/templates/"+_videoName.getText() + "/info.class");
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			TemplateData data = new TemplateData(this);
-		
+
 			oos.writeObject(data);
 			oos.close();
-		
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -261,8 +246,10 @@ public class CreateHubController implements Initializable{
 
 			@Override
 			public void handle(WorkerStateEvent arg0) {
-				System.out.println("yeet");
-				_doneSaving = true;
+				//////system.out.println("yeet");
+				_doneSaving=true;
+				_newAudioList=true;
+
 			}
 		});
 	}

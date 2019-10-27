@@ -11,13 +11,13 @@
    <children>
       <AnchorPane prefHeight="600.0" prefWidth="800.0">
          <children>
-            <Button fx:id="_searchButton" defaultButton="true" layoutX="264.0" layoutY="316.0" mnemonicParsing="false" onAction="#search" text="SEARCH">
+            <Button fx:id="_searchButton" defaultButton="true" layoutX="278.0" layoutY="319.0" mnemonicParsing="false" onAction="#search" text="SEARCH">
                <font>
-                  <Font name="System Bold Italic" size="43.0" />
+                  <Font name="Chilanka Regular" size="43.0" />
                </font></Button>
-            <Label layoutX="184.0" layoutY="146.0" text="SELECT A TOPIC:" textFill="#0f8337">
+            <Label layoutX="165.0" layoutY="142.0" text="SELECT A TOPIC:" textFill="#0f8337">
                <font>
-                  <Font name="System Bold Italic" size="46.0" />
+                  <Font name="Chilanka Regular" size="55.0" />
                </font>
             </Label>
             <TextField fx:id="_term" layoutX="271.0" layoutY="252.0" prefHeight="40.0" prefWidth="238.0" promptText="term">
@@ -26,7 +26,7 @@
                </font>
             </TextField>
             <Button fx:id="_backButton" cancelButton="true" layoutX="737.0" layoutY="560.0" mnemonicParsing="false" onAction="#back" style="-fx-background-color: red;" text="back" />
-            <ProgressIndicator fx:id="_searching" layoutX="533.0" layoutY="246.0" visible="false" />
+            <ProgressIndicator fx:id="_searching" layoutX="364.0" layoutY="339.0" prefHeight="53.0" prefWidth="83.0" visible="false" />
          </children>
       </AnchorPane>
    </children>

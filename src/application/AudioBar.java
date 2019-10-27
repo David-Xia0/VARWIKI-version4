@@ -73,7 +73,7 @@ public class AudioBar extends HBox{
 			return;
 		}
 		_play=true;
-		System.out.println(_name);
+		//System.out.println(_name);
 		RunBash audioCreation = new RunBash("play ./resources/temp/audio/"+_name+".wav");
 		_team.submit(audioCreation);
 		audioCreation.setOnSucceeded(new EventHandler<WorkerStateEvent>() {

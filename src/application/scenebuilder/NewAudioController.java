@@ -62,7 +62,7 @@ public class NewAudioController {
 
 
 	@FXML
-	void handleSaveAudio(ActionEvent event) {
+	void handleSaveAudio() {
 		String selectedText=_displayTextArea.getSelectedText();
 
 		if(selectedText.isEmpty()) {
@@ -129,7 +129,8 @@ public class NewAudioController {
 
 	@FXML
 	void saveAllAudio(ActionEvent event) {
-		handleReturn();
+		_displayTextArea.selectAll();
+		handleSaveAudio();
 	}
 	
 	public String getText() {

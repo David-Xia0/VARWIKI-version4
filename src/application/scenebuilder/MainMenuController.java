@@ -4,8 +4,10 @@ package application.scenebuilder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +124,7 @@ public class MainMenuController implements Initializable{
 			FileInputStream fileIn = new FileInputStream(data);
 			ObjectInputStream object = new ObjectInputStream(fileIn);
 			TemplateData template = (TemplateData) object.readObject();
-			CreateMenuController controller = (CreateMenuController) exit(SceneType.CreateMenu);
+			CreateHubController controller = (CreateHubController) exit(SceneType.createHub);
 			controller.setup(template);
 			object.close();
 		} catch (FileNotFoundException e) {
@@ -190,7 +192,24 @@ public class MainMenuController implements Initializable{
 	 */
 	@FXML
 	public void handleLockScreen(ActionEvent event) {
+		FileOutputStream fos;
 		_lockStatus=!_lockStatus;
+		try {
+			File file = new File(Main.getPathToResources() + "lockData.class");
+			//file.createNewFile();
+			fos = new FileOutputStream(Main.getPathToResources() + "lockData.class");
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			Boolean data = Boolean.valueOf(_lockStatus);
+			oos.writeObject(data);
+			oos.close();
+		
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		setLockButtons();
 	}
 
@@ -222,10 +241,24 @@ public class MainMenuController implements Initializable{
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		if(_firstLoad) {
-			_lockStatus = true;
-			_firstLoad = false;
-		}
+			
+			String data = Main.getPathToResources() + "lockData.class";
+			try {
+				FileInputStream fileIn = new FileInputStream(data);
+				ObjectInputStream object = new ObjectInputStream(fileIn);
+				Boolean locked = (Boolean) object.readObject();
+				_lockStatus = locked.booleanValue();
+				object.close();
+			} catch (FileNotFoundException e) {
+				_lockStatus=false;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			setLockButtons();
 		/*
 		 * this loads the current stored videos and loads the video player with the first stored video.
 		 */

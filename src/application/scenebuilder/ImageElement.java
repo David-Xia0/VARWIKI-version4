@@ -84,7 +84,7 @@ public class ImageElement extends AnchorPane{
     	if(_isSelected){
     _imageHolder.setOpacity(1);
     }else {
-    		_imageHolder.setOpacity(0.2); 
+    		_imageHolder.setOpacity(0.7); 
     	}
      
     }

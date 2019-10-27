@@ -115,7 +115,7 @@ public class Main extends Application {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("yep");
+		////system.out.println("yep");
 		return null;
 	}
 
@@ -135,7 +135,7 @@ public class Main extends Application {
 			dir = dir.substring(0, dir.lastIndexOf("/"));
 			return dir + "/resources";
 		} catch (URISyntaxException e) {
-			System.out.println("I/O issue, unexpected setup");
+			////system.out.println("I/O issue, unexpected setup");
 			e.printStackTrace();
 		}
 		return System.getProperty("user.dir") + "/bin/resources";

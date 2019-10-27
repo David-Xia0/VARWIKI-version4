@@ -135,7 +135,7 @@ public class ModifyImagesController implements Initializable{
 		selectNone();
 		System.out.println("itsnull: "+SelectedImages ==null);
 		for(String i : SelectedImages) {
-			_imageList.get(Integer.parseInt(i)-1).setSelected(true);
+			_imageList.get(Integer.parseInt(i.substring(0, i.lastIndexOf(".jpg")))-1).setSelected(true);
 		}
 
 	}

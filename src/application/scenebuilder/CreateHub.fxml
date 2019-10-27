@@ -40,7 +40,7 @@
                   <Font name="Chilanka Regular" size="18.0" />
                </font></CheckBox>
             <Button layoutX="617.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleNewSearch" style="-fx-background-color: f10101;" text="New Search" />
-            <ProgressIndicator fx:id="_loading" layoutX="66.0" layoutY="478.0" minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" visible="false" />
+            <ProgressIndicator fx:id="_loading" layoutX="351.0" layoutY="453.0" minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" visible="false" />
             <Button layoutX="50.0" layoutY="217.0" mnemonicParsing="false" onAction="#handleToCurrentAudio" style="-fx-background-color: orange;" text="Modify Audio">
                <font>
                   <Font name="Chilanka Regular" size="34.0" />

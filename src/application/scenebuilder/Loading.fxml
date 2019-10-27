@@ -4,17 +4,28 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane style="-fx-background-image: url(&quot;resources/background.jpg&quot;);" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1">
+<AnchorPane style="-fx-background-image: url(&quot;resources/background.jpg&quot;);" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane>
-         <children>
-            <Label text="WELCOME TO VARWIKI" textFill="WHITE">
-               <font>
-                  <Font name="Chilanka Regular" size="65.0" />
-               </font>
-            </Label>
-         </children>
-      </AnchorPane>
+      <AnchorPane />
+      <Label layoutX="12.0" layoutY="14.0" text="WELCOME" textFill="#038a27" textOverrun="WORD_ELLIPSIS">
+         <font>
+            <Font name="Chilanka Regular" size="65.0" />
+         </font>
+      </Label>
+      <Label layoutX="163.0" layoutY="84.0" text="TO" textFill="#038a27" textOverrun="WORD_ELLIPSIS">
+         <font>
+            <Font name="Chilanka Regular" size="65.0" />
+         </font>
+      </Label>
+      <Label layoutX="175.0" layoutY="149.0" text="VARWIKI" textFill="#038a27" textOverrun="WORD_ELLIPSIS">
+         <font>
+            <Font name="Chilanka Regular" size="65.0" />
+         </font>
+      </Label>
+      <Label layoutX="186.0" layoutY="221.0" text="By Joshua Burton and David Xiao">
+         <font>
+            <Font name="Chilanka Regular" size="16.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
