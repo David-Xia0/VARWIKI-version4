@@ -76,6 +76,7 @@ public class CreateHubController implements Initializable{
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		
 
 		ObservableList<String> music = FXCollections.observableArrayList();
 		music.addAll("No Music","victor_-_Calling_on_Dolphins.mp3");
@@ -189,7 +190,7 @@ public class CreateHubController implements Initializable{
 	 */
 	public void createVideo() {
 		System.out.println("hellooo");
-		VideoCreator creator = new VideoCreator(_data);
+		VideoCreator creator = new VideoCreator(this);
 		_team.submit(creator);
 		creator.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
@@ -203,7 +204,7 @@ public class CreateHubController implements Initializable{
 	private void handleSaveTemplate(){
 		String path = "./resources/templates/" + _videoName.getText();
 		File template = new File(path);
-		if(template.exists()) {
+		/*if(template.exists()) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("Overwrite existing template?");
 			alert.setHeaderText("Template with this name already exists");
@@ -215,8 +216,9 @@ public class CreateHubController implements Initializable{
 				template.delete();
 			}
 
-		}
+		}*/
 		template.mkdir();
+		_team.submit(new RunBash("rm -r ./resources/templates/"+_videoName.getText()));
 		_team.submit(new RunBash("cp -rf ./resources/temp/images "+ path));
 		_team.submit(new RunBash("cp -rf ./resources/temp/audio "+ path));
 
@@ -276,6 +278,7 @@ public class CreateHubController implements Initializable{
 
 	@FXML
 	void handleImages(ActionEvent event) {
+		_defaultImages=false;
 		if(_imageControl ==null) {
 			_imageControl = (ModifyImagesController)Main.changeScene(SceneType.newImages, this);
 			_imageControl.setup(_videoName.getScene());
