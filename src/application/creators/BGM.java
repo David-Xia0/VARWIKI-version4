@@ -24,7 +24,7 @@ public class BGM {
 	public void mergeBGM(String file, double length) {
 		
 	
-			if(_bgm == null || _bgm.contentEquals("No music")) {
+			if(_bgm == null || _bgm.contentEquals("No Music")) {
 				return;
 			}
 		
