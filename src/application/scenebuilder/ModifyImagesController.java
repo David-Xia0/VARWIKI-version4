@@ -33,6 +33,7 @@ public class ModifyImagesController implements Initializable{
 	private List<String> _images = new ArrayList<String>();
 	private ObservableList<ImageElement> _imageList;
 	private Scene _parent;
+	private boolean createFinished = false;
 
 
 	/**
@@ -41,13 +42,12 @@ public class ModifyImagesController implements Initializable{
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		RunBash bash = new RunBash("ls ./resources/temp/images | cut -f1 -d'.'");
-		_team.submit(bash);
-
 		bash.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
 			@Override
 			public void handle(WorkerStateEvent event) {
 
+				System.out.println("hb");
 				try {
 					_images = bash.get();
 					System.out.println(_images);
@@ -65,8 +65,13 @@ public class ModifyImagesController implements Initializable{
 					_mainPane.add(displayImage, i%3, i/3);
 					i++;	
 				}
+				
+				createFinished=true;
 			}
-		});
+
+			});
+		_team.submit(bash);
+
 	}
 
 
@@ -114,10 +119,10 @@ public class ModifyImagesController implements Initializable{
 	}
 
 	public void setSelectedImages(List<String> SelectedImages) {
-		if (SelectedImages==null || SelectedImages.isEmpty()) {
-			selectAll();
+		if (SelectedImages.size() == 9) {
 			return;
 		}
+		System.out.println(SelectedImages);
 
 		selectNone();
 		for(String i : SelectedImages) {
