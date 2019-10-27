@@ -68,11 +68,11 @@ source run.sh
 2) All Past Creations can be replayed In the [media player](#media-player).
 3) Button locks and unlocks screen
 4) These options are greyed out. Will become funcitonal if screen is unlocked
-5) Locking screen disables Create,Modify and Delete Buttons
+
 
 Video Creation, Modification and Deletion should all be done under parental guidence and supervision. Parental guidence is recommended to ensure the childs safety and optimise the learning potential of this application.
 
-6) This button leads to the Matching Quiz [Game](#matching-game)
+5) This button leads to the Matching Quiz [Game](#matching-game)
 
 ![MainMenuDelete](/UserManualImages/MainMenu.png)
 
@@ -113,7 +113,7 @@ This is an exmaple of the screen Unlocked
 1) Audio chunks are stored in this list. (The final video created will contain the audio stored in this list according to the vertical order)
 2) Selected audio chunk can be played back
 3) Selected audio chunk can be deleted
-4) Postion of audio chunk can be moved
+4) Postion of audio chunk can be moved up or down
 5) [Create New Audio Chunks](#create-audio)
 6) return to [Create Menu](#create-menu)
 
@@ -160,15 +160,13 @@ video is played on the left
 
 ![MatchingGame](/UserManualImages/MediaPlayer.png)
 
-INSERT MEDIA PLAYER IMAGE HERE
 
-1) Video is played here
-2) Clicking on the video plays or pauses it.
-3) Current duration played
-4) Go to start of Video/Go to previous Video
-5) Go to next Video
-6) Video Time slider
-7) Mute/Unmute
+1) Clicking on the video plays or pauses it.
+2) Current duration played
+3) Go to start of Video/Go to previous Video
+4) Go to next Video
+5) Video Time slider
+6) Mute/Unmute
 
 
 
