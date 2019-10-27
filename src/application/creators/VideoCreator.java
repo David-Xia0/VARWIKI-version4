@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import application.RunBash;
+import application.scenebuilder.CreateHubController;
 import application.scenebuilder.CreateMenuController;
 import application.scenebuilder.TemplateData;
 import javafx.concurrent.Task;
@@ -32,6 +33,37 @@ public class VideoCreator extends Task<Void> {
 	private final String outputLocation;
 	private RunBash createVideo;
 
+	public VideoCreator(TemplateData videoData) {
+		name = videoData.getName();
+		term = videoData.getTerm();
+		_music = videoData.getBGM();
+		usingImages = videoData.usingImages();
+		audioText = videoData.getAudioText();
+		_files = videoData.getOrder();
+		_selectedImages = new ArrayList<String>();
+		List<String> selectedImages = videoData.getSelectedImages();
+		for (String image : selectedImages) {
+			_selectedImages.add(image.substring(0, image.lastIndexOf(".")));
+		}
+		resourceLocation = "/temp";
+		outputLocation = "./resources/VideoCreations/" + name + ".mp4";
+	}
+
+	public VideoCreator(CreateHubController videoData) {
+		name = videoData.getName();
+		term = videoData.getTerm();
+		_music = videoData.getBGM();
+		usingImages = videoData.usingImages();
+		audioText = videoData.getAudioText();
+		_files = videoData.fileOrder();
+		_selectedImages = new ArrayList<String>();
+		List<String> selectedImages = videoData.getSelectedImages();
+		for (String image : selectedImages) {
+			_selectedImages.add(image.substring(0, image.lastIndexOf(".")));
+		}
+		resourceLocation = "/temp";
+		outputLocation = "./resources/VideoCreations/" + name + ".mp4";
+	}
 	public VideoCreator(CreateMenuController videoData) {
 		name = videoData.getName();
 		term = videoData.getTerm();
@@ -47,10 +79,9 @@ public class VideoCreator extends Task<Void> {
 		resourceLocation = "/temp";
 		outputLocation = "./resources/VideoCreations/" + name + ".mp4";
 	}
-
 	/**
 	 * this constructor is mainly designed for the matching game to use
-	 */
+	 *
 	public VideoCreator(TemplateData videoData) {
 		name = videoData.getName();
 		term = " ";
@@ -60,9 +91,10 @@ public class VideoCreator extends Task<Void> {
 		_files = videoData.getOrder();
 		_selectedImages = videoData.getSelectedImages();
 		resourceLocation = "/templates/" + name;
-		outputLocation = "./resources/temp/matchingVideo.mp4";
+		outputLocation = "./resources/videoCreations/" + name + ".mp4";
 
 	}
+	*/
 
 	/**
 	 * creates slideshow from stored and selected images
@@ -91,16 +123,6 @@ public class VideoCreator extends Task<Void> {
 		_team.submit(createFile);
 	}
 
-	/*private void markImages(List<String> images) {
-		for (String path : images) {
-			System.out.println(path);
-			RunBash mark = new RunBash(
-					"ffmpeg -i ./resources" + resourceLocation + "/images/" + path + ".jpg -vf \"drawtext=text='" + term
-							+ "':fontcolor=white:fontsize=75:x=(w-text_w)/2: y=(h-text_h-line_h)/2:\" ./resources/temp/"
-							+ path + ".jpg");
-			_team.submit(mark);
-		}
-	}*/
 
 	@Override
 	protected Void call() throws Exception {

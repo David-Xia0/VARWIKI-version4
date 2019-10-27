@@ -85,8 +85,9 @@ public class SearchController {
 					imageDown.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 						@Override
 						public void handle(WorkerStateEvent event) {
-							CreateMenuController controller = (CreateMenuController)exit(SceneType.CreateMenu,false);
-							controller.setup(text,term);
+							CreateHubController controller = (CreateHubController)exit(SceneType.createHub,false);
+							TemplateData newData = new TemplateData(term,text);
+							controller.setup(newData);
 						}
 					});
 					
@@ -108,7 +109,7 @@ public class SearchController {
 	}	
 	
 	/**
-	 * change screen, but we cna determine if we want to clear the temp folder or not
+	 * change screen, but we can determine if we want to clear the temp folder or not
 	 * @param location
 	 * @param destroy
 	 * @return

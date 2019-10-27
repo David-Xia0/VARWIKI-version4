@@ -8,11 +8,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="698.0" prefWidth="660.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.scenebuilder.SetImagesController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="698.0" prefWidth="660.0" style="-fx-background-image: url(&quot;resources/background.jpg&quot;);" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.scenebuilder.ModifyImagesController">
    <children>
-      <Label layoutX="112.0" layoutY="15.0" text="Please Select Images to include">
+      <Label layoutX="147.0" layoutY="14.0" text="Please Select Images to include" textFill="#068a11">
          <font>
-            <Font size="26.0" />
+            <Font name="Chilanka Regular" size="26.0" />
          </font>
       </Label>
       <GridPane fx:id="_mainPane" gridLinesVisible="true" layoutX="30.0" layoutY="46.0" AnchorPane.bottomAnchor="64.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="46.0">
@@ -27,17 +27,17 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <Button layoutX="561.0" layoutY="649.0" mnemonicParsing="false" onAction="#handleDone" style="-fx-background-color: lightblue;" text="Done">
+      <Button layoutX="558.0" layoutY="645.0" mnemonicParsing="false" onAction="#handleDone" style="-fx-background-color: lightblue;" text="Done">
          <font>
-            <Font size="21.0" />
+            <Font name="Chilanka Regular" size="22.0" />
          </font></Button>
-      <Button fx:id="_allButton" layoutX="14.0" layoutY="650.0" mnemonicParsing="false" onAction="#selectAll" style="-fx-background-color: orange;" text="Select all">
+      <Button fx:id="_allButton" layoutX="14.0" layoutY="646.0" mnemonicParsing="false" onAction="#selectAll" style="-fx-background-color: orange;" text="Select all">
          <font>
-            <Font size="20.0" />
+            <Font name="Chilanka Regular" size="21.0" />
          </font></Button>
-      <Button fx:id="_noneButton" layoutX="149.0" layoutY="650.0" mnemonicParsing="false" onAction="#selectNone" style="-fx-background-color: red;" text="Select none">
+      <Button fx:id="_noneButton" layoutX="137.0" layoutY="646.0" mnemonicParsing="false" onAction="#selectNone" style="-fx-background-color: red;" text="Select none">
          <font>
-            <Font size="20.0" />
+            <Font name="Chilanka Regular" size="21.0" />
          </font></Button>
    </children>
 </AnchorPane>

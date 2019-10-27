@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import application.Main;
 import application.RunBash;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,27 +16,25 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
-/**
- * manages scene where user selects images to include in creation
- * @author student
- *
- */
-public class SetImagesController implements Initializable{
+public class ModifyImagesController implements Initializable{
 
 	@FXML
 	private GridPane _mainPane;
 
 	@FXML
 	private Button _resetButton;
-
+	private boolean _setup=false;
 
 	private ExecutorService _team = Executors.newSingleThreadExecutor(); 
 	private List<String> _images = new ArrayList<String>();
 	private ObservableList<ImageElement> _imageList;
-	private CreateMenuController _parent;
+	private Scene _parent;
+	private TemplateData _data;
+
 
 
 	/**
@@ -44,13 +43,14 @@ public class SetImagesController implements Initializable{
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		RunBash bash = new RunBash("ls ./resources/temp/images | cut -f1 -d'.'");
-		_team.submit(bash);
-
 		bash.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+
+			
 
 			@Override
 			public void handle(WorkerStateEvent event) {
 
+				System.out.println("hb");
 				try {
 					_images = bash.get();
 					System.out.println(_images);
@@ -68,14 +68,23 @@ public class SetImagesController implements Initializable{
 					_mainPane.add(displayImage, i%3, i/3);
 					i++;	
 				}
+				while(!_setup) {
+					int ii=0;
+				}
+				setSelectedImages(_data.getSelectedImages());
+
 			}
-		});
+
+			});
+		_team.submit(bash);
+
 	}
 
 
-
-	public void construct(CreateMenuController parent) {
+	public void setup(Scene parent, TemplateData data) {
 		_parent=parent;
+		_data = data;
+		_setup=true;
 	}
 
 	@FXML
@@ -89,7 +98,7 @@ public class SetImagesController implements Initializable{
 	}
 
 	/**
-	 * Helper for selection buttons, checks if a image is selected or note and reverses the selection
+	 * Helper for selection buttons, checks if a image is selected or not and reverses the selection
 	 * @param all
 	 */
 	public void selectAllNone(boolean all) {
@@ -114,37 +123,42 @@ public class SetImagesController implements Initializable{
 	 */
 	@FXML
 	public void handleDone(ActionEvent event) {
-		_parent.popdownSetImages();
+		Main.getMainStage().setScene(_parent);
 	}
 
 	public void setSelectedImages(List<String> SelectedImages) {
-		if (SelectedImages==null || SelectedImages.isEmpty()) {
-			selectAll();
+		if (SelectedImages.size() == 9) {
 			return;
 		}
+		System.out.println(SelectedImages);
 
 		selectNone();
+		System.out.println("itsnull: "+SelectedImages ==null);
 		for(String i : SelectedImages) {
 			_imageList.get(Integer.parseInt(i)-1).setSelected(true);
 		}
-		
+
 	}
 
 	/**
 	 * returns list of selected images
 	 * @return
 	 */
-	public List<ImageElement> getSelectedImages(){
-		List<ImageElement> selected = new ArrayList<ImageElement>();
+	public List<String> getSelectedImages(){
+		List<String> selected = new ArrayList<String>();
 
 		for(ImageElement i:_imageList) {
 			if(i.isSelected()) {
-				selected.add(i);
+				selected.add(i.toString());
 			}
 		}
 		return selected;
 	}
 
 
-
+	public void setMe() {
+		Main.getMainStage().setScene(_mainPane.getScene());
+		
+	}
 }
+

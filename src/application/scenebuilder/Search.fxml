@@ -7,14 +7,17 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.scenebuilder.SearchController">
+<AnchorPane style="-fx-background-image: url(&quot;resources/background.jpg&quot;);" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.scenebuilder.SearchController">
    <children>
       <AnchorPane prefHeight="600.0" prefWidth="800.0">
          <children>
-            <Button fx:id="_searchButton" defaultButton="true" layoutX="527.0" layoutY="259.0" mnemonicParsing="false" onAction="#search" text="Search" />
-            <Label layoutX="173.0" layoutY="183.0" text="Please select a search term for your creation:">
+            <Button fx:id="_searchButton" defaultButton="true" layoutX="264.0" layoutY="316.0" mnemonicParsing="false" onAction="#search" text="SEARCH">
                <font>
-                  <Font size="19.0" />
+                  <Font name="System Bold Italic" size="43.0" />
+               </font></Button>
+            <Label layoutX="184.0" layoutY="146.0" text="SELECT A TOPIC:" textFill="#0f8337">
+               <font>
+                  <Font name="System Bold Italic" size="46.0" />
                </font>
             </Label>
             <TextField fx:id="_term" layoutX="271.0" layoutY="252.0" prefHeight="40.0" prefWidth="238.0" promptText="term">
