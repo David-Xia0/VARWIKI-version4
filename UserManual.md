@@ -1,6 +1,6 @@
 # VARWIKI - User Manual 
 
-This application is intended for the educational development of a child (7-10).
+This application is intended for the educational development of children (7-10).
 Parental Guidence is recommended for the safety and learning effecieny of the child.
 
 ## Table of contents
@@ -22,18 +22,20 @@ Parental Guidence is recommended for the safety and learning effecieny of the ch
 
 ### Set Up
 This project was built using the the following operating system and packages. It should preferably be run under the same conditions.
-The operating system should be Ubuntu 19.04.
+
+The operating system is L:inux Ubuntu 19.04.
 
 Java Runtime:
+
 Java 13 was used to build this project, and should also be used to run it.
 
 
 Installed Packages:
-  ffmpeg
-  soxi
-  festival
-  wikit
-  npm
+ ffmpeg
+ soxi
+ festival
+ wikit
+ npm
 
 If you have access to the `softeng206_ubuntu_image_updated.ova` then all required packages should be already installed.
 
