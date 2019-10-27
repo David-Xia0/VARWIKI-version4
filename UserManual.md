@@ -149,6 +149,8 @@ It is recommeneded that you have a lot of current saved creations. IF you do not
 
 After the user selects an answer option the following options will appear
 
+INSERT IMAGE HERE
+
 1) Go to next question
 2) Answer Result
 3) Exit the [Main Menu screen](#main-menu)
