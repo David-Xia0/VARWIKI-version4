@@ -13,7 +13,7 @@ Parental Guidence is recommended for the safety and learning effecieny of the ch
    * [Search Menu](#search-menu)
    * [Create Menu](#create-menu)
    * [Image Selection](#image-selection)
-   * [Creation Template](#creation-template)
+   * [Media Player](#media-player)
    * [Matching Game](#matching-game)
 <!--te-->
 
@@ -60,23 +60,30 @@ source run.sh
 
 ## Main Menu
 
-![MainMenuDelete](/UserManualImages/MainMenuDelete.png)
-
-1) This box shows a list of all past creations. 
-2) All Past Creations can be replayed In the [media player](#media-player).
-3) Create a new creation
-4) Modify a current creation
-5) Delete a creation
-6) To complete the delete operation, the applicaiton needs confirmation from the user
 
 ![MainMenuLocked](/UserManualImages/MainMenuLocked.png)
 
-1) Button locks and unlocks screen
-2) Locking screen disables Create,Modify and Delete Buttons
+
+1) This box shows a list of all past creations. 
+2) All Past Creations can be replayed In the [media player](#media-player).
+3) Button locks and unlocks screen
+4) These options are greyed out. Will become funcitonal if screen is unlocked
+5) Locking screen disables Create,Modify and Delete Buttons
 
 Video Creation, Modification and Deletion should all be done under parental guidence and supervision. Parental guidence is recommended to ensure the childs safety and optimise the learning potential of this application.
 
-3) This button leads to the Matching Quiz [Game](#matching-game)
+6) This button leads to the Matching Quiz [Game](#matching-game)
+
+![MainMenuDelete](/UserManualImages/MainMenu.png)
+
+This is an exmaple of the screen Unlocked
+
+1) Create a new creation
+2) Modify a current creation
+3) Delete a creation
+4) To complete the delete operation, the applicaiton needs confirmation from the user
+
+
 
 ## Search Menu
 
@@ -87,7 +94,7 @@ Video Creation, Modification and Deletion should all be done under parental guid
 
 ## Create Menu
 
-INSERT CREATE HUB MENU
+![](/UserManualImages/CreateHub.png)
 
 1) Name of the Video Creation can be edited. Default name is creation topic
 2) [Modify Audio](#modify-audio)
@@ -101,7 +108,7 @@ INSERT CREATE HUB MENU
 
 ## Modify Audio
 
-INSERT IMAGE HERE
+![](/UserManualImages/ModifyAudio.png)
 
 1) Audio chunks are stored in this list. (The final video created will contain the audio stored in this list according to the vertical order)
 2) Selected audio chunk can be played back
@@ -113,7 +120,7 @@ INSERT IMAGE HERE
 
 ## Create Audio
 
-INSERT IMAGE HERE
+![](/UserManualImages/CreateAudio.png)
 
 1) text obtained from wikipedia is stored here
 2) Select the voice package used in text to speech translation of text
@@ -126,13 +133,9 @@ INSERT IMAGE HERE
 
 ## Image Selection
 
-![ImageSelection](/UserManualImages/ImageSelection.png)
+![ImageSelection](/UserManualImages/SelectImages.png)
 
 1) Clicking on any image within the grid will select or deselect that image
-
-Final Video Created will contain all selected images. Each appear for the same length of time as the other images.
-
-![ImageNegSelection](/UserManualImages/ImageNegSelection.png)
 
 1) Deselects all images
 2) Selects all images
@@ -147,9 +150,6 @@ It is recommeneded that you have a lot of current saved creations. IF you do not
 1) Video is played here
 2) User is meant to choose one of the four answer options (There will always be ATLEAST ONE correct answer)
 
-After the user selects an answer option the following options will appear
-
-INSERT IMAGE HERE
 
 1) Go to next question
 2) Answer Result
@@ -157,6 +157,8 @@ INSERT IMAGE HERE
 video is played on the left
 
 ## Media Player
+
+![MatchingGame](/UserManualImages/MediaPlayer.png)
 
 INSERT MEDIA PLAYER IMAGE HERE
 
