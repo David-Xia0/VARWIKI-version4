@@ -26,7 +26,6 @@ This project was built using the the following operating system and packages. It
 The operating system is L:inux Ubuntu 19.04.
 
 Java Runtime:
-
 Java 13 was used to build this project, and should also be used to run it.
 
 
@@ -59,15 +58,12 @@ source run.sh
 
 
 
-
-
-
 ## Main Menu
 
 ![MainMenuDelete](/UserManualImages/MainMenuDelete.png)
 
 1) This box shows a list of all past creations. 
-2) All Past Creations can be replayed In the media player.
+2) All Past Creations can be replayed In the [media player](#media-player).
 3) Create a new creation
 4) Modify a current creation
 5) Delete a creation
@@ -91,30 +87,42 @@ Video Creation, Modification and Deletion should all be done under parental guid
 
 ## Create Menu
 
-![CreateMenu](/UserManualImages/CreateMenu.png)
+INSERT CREATE HUB MENU
 
-1) All Summary text discovered from Wikipedia will be displayed here. This text can be directly edited.
-2) Test text to speech translation of highlighted selection of text within 1)
-3) Save text to speech translation fo highlighted selection of text within 1)
-4) Save all text within 1) as text to speech audio
+1) Name of the Video Creation can be edited. Default name is creation topic
+2) [Modify Audio](#modify-audio)
+3) [Image Selection](#image-selection)
+4) Include Images or not
+5) Select Background Music
+6) Finishes video creation. Creates video then you are returned to main menu when it is done.
+7) New Search sends user back to [search screen](#search-menu)
+8) Cancel returns user back to [main menu](#main-menu)
 
-![CreateMenuFestival](/UserManualImages/CreateMenuFestival.png)
+
+## Modify Audio
+
+INSERT IMAGE HERE
 
 1) Audio chunks are stored in this list. (The final video created will contain the audio stored in this list according to the vertical order)
 2) Selected audio chunk can be played back
 3) Selected audio chunk can be deleted
 4) Postion of audio chunk can be moved
-5) A different text to speech voice package can be selected (the other voice packages may not be able to translate some words)
+5) [Create New Audio Chunks](#create-audio)
+6) return to [Create Menu](#create-menu)
 
-![CreateMenuBGM](/UserManualImages/CreateMenuBGM.png)
 
-1) Background music can be selected and added to the video
-2) Video should be given a name. Default name will be search term entered. Name can only include letters numbers and underscores and hypens.
-3) Select if you want your video to contain images obtains from flickr.
-4) Select the [specific images](#image-selection) you want in your video
-5) Finishes video creation. Creates video then you are returned to main menu when it is done.
-6) New Search sends user back to [search screen](#search-menu)
-7) Cancel returns user back to [main menu](#main-menu)
+## Create Audio
+
+INSERT IMAGE HERE
+
+1) text obtained from wikipedia is stored here
+2) Select the voice package used in text to speech translation of text
+3) Test the text to speech translation of highlighted text
+4) Save Text to speech translation of highlighted text
+5) Save all Text for Text to speech translation
+6) return to [Modify Audio Menu](#modify-audio)
+
+
 
 ## Image Selection
 
@@ -129,13 +137,6 @@ Final Video Created will contain all selected images. Each appear for the same l
 1) Deselects all images
 2) Selects all images
 3) Closes image selection screen
-
-
-## Creation Template
-
-
-
-
 
 ## Matching Game
 
@@ -152,5 +153,18 @@ After the user selects an answer option the following options will appear
 2) Answer Result
 3) Exit the [Main Menu screen](#main-menu)
 video is played on the left
+
+## Media Player
+
+INSERT MEDIA PLAYER IMAGE HERE
+
+1) Video is played here
+2) Clicking on the video plays or pauses it.
+3) Current duration played
+4) Go to start of Video/Go to previous Video
+5) Go to next Video
+6) Video Time slider
+7) Mute/Unmute
+
 
 
