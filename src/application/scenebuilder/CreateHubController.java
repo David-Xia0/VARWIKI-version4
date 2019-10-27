@@ -189,12 +189,8 @@ public class CreateHubController implements Initializable{
 	 * THis method contains most/all of the bash and ffmpeg commands used in video creation
 	 */
 	public void createVideo() {
-<<<<<<< HEAD
-		VideoCreator creator = new VideoCreator(_data);
-=======
-		System.out.println("hellooo");
 		VideoCreator creator = new VideoCreator(this);
->>>>>>> e92bdfba7eae963f18f5cd5d108d12272abe47cc
+
 		_team.submit(creator);
 		creator.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
@@ -222,11 +218,8 @@ public class CreateHubController implements Initializable{
 
 		}*/
 		template.mkdir();
-<<<<<<< HEAD
 
-=======
 		_team.submit(new RunBash("rm -r ./resources/templates/"+_videoName.getText()));
->>>>>>> e92bdfba7eae963f18f5cd5d108d12272abe47cc
 		_team.submit(new RunBash("cp -rf ./resources/temp/images "+ path));
 		_team.submit(new RunBash("cp -rf ./resources/temp/audio "+ path));
 	
