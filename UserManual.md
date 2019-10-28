@@ -48,7 +48,8 @@ Make sure the following folders and files attached with this project are in the 
 
 
 
-<div style="page-break-after: always;"></div>
+
+
 ### Running Application
 
 Use the attached script file to run the java application.
@@ -57,7 +58,7 @@ Use the attached script file to run the java application.
 source run.sh
 ```
 
-
+<div style="page-break-after: always;"></div>
 
 
 ## Main Menu
@@ -80,7 +81,7 @@ Video Creation, Modification and Deletion should all be done under parental guid
 This is an example of the screen Unlocked
 
 1) [Create a new creation](#search-menu). Takes user to search for a topic
-2) Modify a current creation. Sends user to create menu, but with existing data
+2) Modify a current creation. Sends user to create menu, but with existing video data
 3) Delete a creation
 4) To complete the delete operation, the application needs confirmation from the user
 
@@ -103,7 +104,7 @@ This is an example of the screen Unlocked
 3) [Image Selection](#image-selection)
 4) Include Images or not
 5) Select Background Music
-6) Finishes video creation. Creates video then you are returned to main menu when it is done.
+6) After the user has finished editing (There must be at least 1 audio file made) the user can complete the creation process. The video is made and you are returned to the [main menu](#main-menu)
 7) New Search sends user back to [search screen](#search-menu)
 8) Cancel returns user back to [main menu](#main-menu)
 
@@ -128,7 +129,7 @@ This is an example of the screen Unlocked
 2) Select the voice package used in text to speech translation of text
 3) Test the text to speech translation of highlighted text
 4) Save Text to speech translation of highlighted text
-5) Save all Text for Text to speech translation
+5) Save all Text for Text to speech translation (WARNING: depending on the amount of text this function may take some time to complete)
 6) return to [Modify Audio Menu](#modify-audio)
 
 <div style="page-break-after: always;"></div>
@@ -141,7 +142,7 @@ This is an example of the screen Unlocked
 1) Clicking on any image within the grid will select or deselect that image
 2) Deselects all images
 3) Selects all images
-4) Closes image selection screen
+4) Closes image selection screen. Returns to [create menu](#create-menu)
 
 <div style="page-break-after: always;"></div>
 ## Matching Game
@@ -164,8 +165,8 @@ It is recommended that you have a lot of current saved creations. IF you do not 
 1) Clicking on the video plays or pauses it.
 2) Current duration played
 3) Go to start of Video/Go to previous Video
-4) Go to next Video
-5) Video Time slider
+4) Video Time slider
+5) Go to next Video
 6) Mute/Unmute
 
 
