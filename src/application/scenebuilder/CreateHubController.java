@@ -145,8 +145,6 @@ public class CreateHubController implements Initializable{
 			}
 		}
 
-		
-
 		_name = _videoName.getText();
 
 		if((!_name.matches("[a-zA-Z0-9_-]*"))) {
