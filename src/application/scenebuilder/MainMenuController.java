@@ -101,7 +101,7 @@ public class MainMenuController implements Initializable{
 				mediaUrl = new File(Main.getPathToResources() + "/VideoCreations/"+asText.getText()+".mp4").toURI().toURL();
 				Media newMedia = new Media(mediaUrl.toExternalForm());
 				_playerBox.setMedia(newMedia);
-				_playerBox.addLabel(name);
+				_playerBox.addLabel(template.getTerm());
 			} catch (Exception e) {
 				//e.printStackTrace();
 			}
@@ -195,9 +195,9 @@ public class MainMenuController implements Initializable{
 		FileOutputStream fos;
 		_lockStatus=!_lockStatus;
 		try {
-			File file = new File(Main.getPathToResources() + "lockData.class");
+			File file = new File(Main.getPathToResources() + "/lockData.class");
 			//file.createNewFile();
-			fos = new FileOutputStream(Main.getPathToResources() + "lockData.class");
+			fos = new FileOutputStream(Main.getPathToResources() + "/lockData.class");
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			Boolean data = Boolean.valueOf(_lockStatus);
 			oos.writeObject(data);
@@ -242,7 +242,7 @@ public class MainMenuController implements Initializable{
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 			
-			String data = Main.getPathToResources() + "lockData.class";
+			String data = Main.getPathToResources() + "/lockData.class";
 			try {
 				FileInputStream fileIn = new FileInputStream(data);
 				ObjectInputStream object = new ObjectInputStream(fileIn);
@@ -250,7 +250,7 @@ public class MainMenuController implements Initializable{
 				_lockStatus = locked.booleanValue();
 				object.close();
 			} catch (FileNotFoundException e) {
-				_lockStatus=false;
+				_lockStatus=true;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

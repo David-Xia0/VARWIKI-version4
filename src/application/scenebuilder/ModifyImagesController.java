@@ -56,10 +56,8 @@ public class ModifyImagesController implements Initializable{
 			@Override
 			public void handle(WorkerStateEvent event) {
 
-				System.out.println("hb");
 				try {
 					_images = bash.get();
-					System.out.println(_images);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

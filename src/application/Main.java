@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.net.URISyntaxException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import application.scenebuilder.MainMenuController;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -94,15 +96,11 @@ public class Main extends Application {
 	 * @param location
 	 */
 	public static Object changeScene(SceneType sceneType, Object location, Stage stage) {
-		//if(destroyFiles) {
-		//	initiateFileSystem();
-		//}
+		location = new MainMenuController();
 		try {
-			FXMLLoader loader = new FXMLLoader();
+			FXMLLoader loader = new FXMLLoader(location.getClass().getResource(sceneType.getFile()));
 			loader.setLocation(location.getClass().getResource(sceneType.getFile()));
-			String fxmlDocPath = System.getProperty("user.dir") + "/src/application/scenebuilder/"+ sceneType.getFile();
-			FileInputStream fxmlStream = new FileInputStream(fxmlDocPath);
-			Parent layout = loader.load(fxmlStream);
+			Parent layout = loader.load();
 			Scene scene = new Scene(layout);
 			stage.setScene(scene);
 
@@ -111,7 +109,7 @@ public class Main extends Application {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		////system.out.println("yep");
+		
 		return null;
 	}
 
@@ -131,7 +129,6 @@ public class Main extends Application {
 			dir = dir.substring(0, dir.lastIndexOf("/"));
 			return dir + "/resources";
 		} catch (URISyntaxException e) {
-			////system.out.println("I/O issue, unexpected setup");
 			e.printStackTrace();
 		}
 		return System.getProperty("user.dir") + "/bin/resources";

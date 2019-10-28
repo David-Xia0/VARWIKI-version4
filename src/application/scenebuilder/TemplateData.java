@@ -44,7 +44,6 @@ public class TemplateData implements Serializable {
 		audioText = template.getAudioText();
 		_files = template.fileOrder();
 		_selectedImages = new ArrayList<String>();
-		System.out.println(template.getSelectedImages());
 		List<String> selectedImages = template.getSelectedImages();
 		for(String image: selectedImages) {
 			_selectedImages.add(image);
@@ -78,7 +77,6 @@ public class TemplateData implements Serializable {
 	
 	public String getText(int audioNumber) {
 		for(String text :audioText) {
-			System.out.println(text);
 		}
 		return audioText.get(audioNumber);
 	}

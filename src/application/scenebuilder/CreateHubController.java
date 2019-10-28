@@ -38,6 +38,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 
+/**
+ * connection point between all video and audio creation tools
+ * @author student
+ *
+ */
 public class CreateHubController implements Initializable{
 
 
@@ -47,6 +52,11 @@ public class CreateHubController implements Initializable{
 	private ExecutorService _team = Executors.newSingleThreadExecutor(); 
 	private TemplateData _data;
 	private String _term;
+	private String _name;
+	private boolean  _newAudioList=false;
+	
+	
+	
 	@FXML
 	private Button _imageButton;
 
@@ -67,10 +77,10 @@ public class CreateHubController implements Initializable{
 
 	@FXML
 	private ProgressIndicator _loading;
-	private String __videoName;
+	
 	@FXML
 	private ChoiceBox<String> _musicChoiceBox;
-	private boolean  _newAudioList=false;
+	
 
 	/**
 	 * this initialises choice box to allow for the selection of different festival voices
@@ -86,9 +96,16 @@ public class CreateHubController implements Initializable{
 	}
 
 
-
+	/**
+	 * finalises video creation by merging audio and video files
+	 * @param event
+	 */
 	@FXML
 	void handleCreate(ActionEvent event) {
+		
+		/*
+		 * error handling before video creation process, ensures user inputs are correct
+		 */
 		if(_videoName.getText().isBlank()) {
 			Main.error("No Name set");
 			return;
@@ -113,10 +130,10 @@ public class CreateHubController implements Initializable{
 			}
 		}
 		
+		//if creation is from an existing template ask if user wants to make new creation or overwrite previous
 		if (_data.isTemplate()) {
 
 			if (!_data.getName().contentEquals(_videoName.getText())) {
-
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.setTitle("Are you sure?");
 				alert.setHeaderText("Name change detected");
@@ -124,38 +141,35 @@ public class CreateHubController implements Initializable{
 				Optional<ButtonType> result = alert.showAndWait();
 				if(result.get() != ButtonType.OK) {
 					return;
-				} else {
-
-					Alert alert2 = new Alert(AlertType.CONFIRMATION);
-					alert.setTitle("Save changes?");
-					alert.setHeaderText("This will overwrite any current Creation with this name");
-					alert.setContentText("Do you want to save your changes?");
-					Optional<ButtonType> result2 = alert2.showAndWait();
-					if(result2.get() != ButtonType.OK) {
-						return;
-					}
 				}
 			}
 		}
 
-		_loading.setVisible(true);
-		_createButton.setVisible(false);
+		
 
-		__videoName = _videoName.getText();
+		_name = _videoName.getText();
 
-		if((!__videoName.matches("[a-zA-Z0-9_-]*"))) {
+		if((!_name.matches("[a-zA-Z0-9_-]*"))) {
 			Main.error("name can only contain letter, numbers, _ and - ");
 			return;
 		}else{
 			//checks if file already exists
-			RunBash f = new RunBash("[ -e ./resources/VideoCreations/"+__videoName+".mp4 ]");
+			RunBash f = new RunBash("[ -e ./resources/VideoCreations/"+_name+".mp4 ]");
 			_team.submit(f);
 			f.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
 				@Override
 				public void handle(WorkerStateEvent arg0) {
 					if(f.getExitStatus()== 0 ) {
-						RunBash remove = new RunBash("rm ./resources/VideoCreations/"+__videoName+".mp4");
+						Alert alert = new Alert(AlertType.CONFIRMATION);
+						alert.setTitle("Creation already Exists?");
+						alert.setHeaderText("A Creation with the same name already Exists");
+						alert.setContentText("Do you want to overwrite?");
+						Optional<ButtonType> result = alert.showAndWait();
+						if(result.get() != ButtonType.OK) {
+							return;
+						}
+						RunBash remove = new RunBash("rm ./resources/VideoCreations/"+_name+".mp4");
 						_team.submit(remove);
 						handleSaveTemplate();
 						createVideo();
@@ -164,11 +178,12 @@ public class CreateHubController implements Initializable{
 						handleSaveTemplate();
 						createVideo();
 					}
+					_loading.setVisible(true);
+					_createButton.setVisible(false);
 				}
 			});
 			return;
 		}
-
 	}
 
 	/**
@@ -236,25 +251,9 @@ public class CreateHubController implements Initializable{
 	}
 
 
-
-	private void handleSaveAudio(String selectedText) {
-		if(selectedText.isEmpty()) {
-			return;
-		}
-		AudioCreator createAudio = new AudioCreator(selectedText,"Default",0);
-		_team.submit(createAudio);
-		createAudio.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-
-			@Override
-			public void handle(WorkerStateEvent arg0) {
-				//////system.out.println("yeet");
-				_doneSaving=true;
-				_newAudioList=true;
-
-			}
-		});
-	}
-
+	/**
+	 * sets up existing audio if any
+	 */
 	@FXML
 	void handleToCurrentAudio() {
 		if(_audioControl == null) {
@@ -266,6 +265,10 @@ public class CreateHubController implements Initializable{
 	}
 
 
+	/**
+	 * handles image selciton transistion
+	 * @param event
+	 */
 	@FXML
 	void handleImages(ActionEvent event) {
 		_defaultImages=false;
@@ -278,12 +281,20 @@ public class CreateHubController implements Initializable{
 
 	}
 
+	/**
+	 * returns to search menu so user can perform another search
+	 * @param event
+	 */
 	@FXML
 	void handleNewSearch(ActionEvent event) {
 		Main.initiateFileSystem();
 		exit(SceneType.Search);
 	}
 
+	/**
+	 * exits to main menu
+	 * @param event
+	 */
 	@FXML
 	void handleReturn(ActionEvent event) {
 		Main.initiateFileSystem();
@@ -291,6 +302,10 @@ public class CreateHubController implements Initializable{
 	}
 
 
+	/**
+	 * used for loading pre existing templates
+	 * @param data
+	 */
 	public void setup(TemplateData data) {
 		_data = data;
 		_videoName.setText(data.getName());
@@ -328,26 +343,10 @@ public class CreateHubController implements Initializable{
 	}
 
 
-	/**
-	 * allows user to select whether to create a video using the text in box, if user has not manually selected text
+
+	/*
+	 * the following are all getters used to obtain information for video creation
 	 */
-	private boolean noText() {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("No audio created");
-		alert.setHeaderText("No audio created");
-		alert.setContentText("would you like to create a creation with the text currently in the box?");
-		Optional<ButtonType> result = alert.showAndWait();
-		if(result.get() == ButtonType.OK) {
-			return true;
-		} else {
-			return false;
-		}
-
-	}
-
-
-	//getters
-
 
 	public String getName() {
 		return _videoName.getText();

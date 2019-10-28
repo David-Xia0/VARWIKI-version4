@@ -86,7 +86,6 @@ public class VideoCreator extends Task<Void> {
 		String text = "";
 		String lastImage = "";
 		for (String name : images) {
-			System.out.println(name);
 			text = text + "file 'images/" + name + "'\nduration " + stringDuration + "\n";
 			lastImage = name;
 		}
@@ -116,7 +115,6 @@ public class VideoCreator extends Task<Void> {
 		}
 
 		RunBash mergeAudio = new RunBash("sox " + audioFileNames + " ./resources/temp/output.wav");
-		System.out.println(audioFileNames);
 
 		mergeAudio.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 			@Override
