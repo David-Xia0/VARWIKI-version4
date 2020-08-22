@@ -1,4 +1,6 @@
-# VARWIKI_version3
+# VARWIKI
+
+![pic](UserManualImages/MainMenu.png)
 
 This Assignment should be run on the SOFTENG 206 VirtualBox Image. 
 
