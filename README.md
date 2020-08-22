@@ -1,5 +1,9 @@
 # VARWIKI
 
+Designed a Java application that creates educational videos from Wikipedia articles.
+
+The system was developed and implemented on an Ubuntu 18.04/Linux OS. Bash scripting was utilized for functionality, development and deployment of project. Developed a GUI interface using JavaFX and Scenebuilder
+
 ![pic](UserManualImages/MainMenu.png)
 
 This Assignment should be run on the SOFTENG 206 VirtualBox Image. 
